@@ -17,9 +17,9 @@ class Zend_Service_Itunes_Search extends Zend_Service_Itunes {
 	 */
 	protected $_searchTerms = array();
 	
-	public function __construct($options)
+	public function __construct($options = null)
 	{
-		parent::setOptions($options);
+		parent::__construct($options);
 		
 		$this->_clientInstance = parent::getHttpClient();
 	}
