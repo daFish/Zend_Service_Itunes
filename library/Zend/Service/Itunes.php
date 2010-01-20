@@ -17,10 +17,10 @@ abstract class Zend_Service_Itunes extends Zend_Service_Abstract
 	protected $_resultCount = 0;
 	
 	/**
-	 * Country for request
+	 * Default country for request
 	 * @var string
 	 */
-	protected $_country = '';
+	protected $_country = 'us';
 	
 	/**
 	 * List of countries were iTunes is available
@@ -54,6 +54,15 @@ abstract class Zend_Service_Itunes extends Zend_Service_Abstract
 		'ja_jp'
 	);
 	
+	const MEDIATYPE_ALL 		= 'all';
+	const MEDIATYPE_PODCAST 	= 'podcast';
+	const MEDIATYPE_MUSIC 		= 'music';
+	const MEDIATYPE_MUSICVIDEO 	= 'musicVideo';
+	const MEDIATYPE_AUDIOBOOK	= 'audiobook';
+	const MEDIATYPE_SHORTFILM	= 'shortFilm';
+	const MEDIATYPE_TVSHOW		= 'tvShow';
+	const MEDIATYPE_MOVIE		= 'movie';
+	
 	/**
 	 * Default media type
 	 * @var $_mediaType string
@@ -65,21 +74,20 @@ abstract class Zend_Service_Itunes extends Zend_Service_Abstract
 	 * @var $_mediaTypes array
 	 */
 	protected $_mediaTypes = array(
-		'movie',
-		'podcast',
-		'music',
-		'musicVideo',
-		'audiobook',
-		'shortFilm',
-		'tvShow',
-		'all'
+		self::MEDIATYPE_ALL,
+		self::MEDIATYPE_AUDIOBOOK,
+		self::MEDIATYPE_MUSIC,
+		self::MEDIATYPE_MUSICVIDEO,
+		self::MEDIATYPE_PODCAST,
+		self::MEDIATYPE_SHORTFILM,
+		self::MEDIATYPE_TVSHOW
 	);
 	
 	/**
 	 * Default entity type
 	 * @var array
 	 */
-	protected $_entity = array('all' => 'album');
+	protected $_entity = array(self::MEDIATYPE_ALL => 'album');
 	
 	/**
 	 * List of all available entity types
@@ -87,35 +95,37 @@ abstract class Zend_Service_Itunes extends Zend_Service_Abstract
 	 * @var $_entityList array
 	 */
 	protected $_entityList = array(
-		'movie' => array(
+		self::MEDIATYPE_MOVIE => array(
 			'movieArtist', 'movie'
 			),
-		'podcast' => array(
+		self::MEDIATYPE_PODCAST => array(
 			'podcastAuthor', 'podcast'
 			),
-		'music' => array(
+		self::MEDIATYPE_MUSIC => array(
 			'musicArtist', 'musicTrack', 'album', 'musicVideo', 'mix'
 			),
-		'musicVideo' => array(
+		self::MEDIATYPE_MUSICVIDEO => array(
 			'musicArtist', 'musicVideo'
 			),
-		'audiobook' => array(
+		self::MEDIATYPE_AUDIOBOOK => array(
 			'audiobookAuthor', 'audiobook'
 			),
-		'shortFilm' => array(
+		self::MEDIATYPE_SHORTFILM => array(
 			'shortFilmArtist', 'shortFilm'
 			),
-		'tvShow' => array(
+		self::MEDIATYPE_TVSHOW => array(
 			'tvEpisode', 'tvSeason'
 			),
-		'all' => array(
+		self::MEDIATYPE_ALL => array(
 			'movie', 'album', 'allArtist', 'podcast', 'musicVideo', 'mix', 'audiobook', 'tvSeason', 'allTrack'
 			),
 	);
 	
+	protected $_attribute = '';
+	
 	protected $_attributesTypes = 
 		array(
-			'movie' => array(
+			self::MEDIATYPE_MOVIE => array(
 				'actorTerm', 
 				'genreIndex', 
 				'artistTerm', 
@@ -130,7 +140,7 @@ abstract class Zend_Service_Itunes extends Zend_Service_Abstract
 				'ratingIndex', 
 				'descriptionTerm'
 			),
-			'podcast' => array(
+			self::MEDIATYPE_PODCAST => array(
 				'titleTerm', 
 				'languageTerm', 
 				'authorTerm', 
@@ -140,7 +150,7 @@ abstract class Zend_Service_Itunes extends Zend_Service_Abstract
 				'keywordsTerm', 
 				'descriptionTerm'
 			),
-			'music' => array(
+			self::MEDIATYPE_MUSIC => array(
 				'mixTerm', 
 				'genreIndex', 
 				'artistTerm', 
@@ -150,27 +160,27 @@ abstract class Zend_Service_Itunes extends Zend_Service_Abstract
 				'songTerm', 
 				'musicTrackTerm'
 			),
-			'musicVideo' => array(
+			self::MEDIATYPE_MUSICVIDEO => array(
 				'genreIndex', 
 				'artistTerm', 
 				'albumTerm', 
 				'ratingIndex', 
 				'songTerm'
 			),
-			'audiobook' => array(
+			self::MEDIATYPE_AUDIOBOOK => array(
 				'titleTerm', 
 				'authorTerm', 
 				'genreIndex', 
 				'ratingIndex'
 			),
-			'shortFilm' => array(
+			self::MEDIATYPE_SHORTFILM => array(
 				'genreIndex', 
 				'artistTerm', 
 				'shortFilmTerm', 
 				'ratingIndex', 
 				'descriptionTerm'
 			),
-			'tvShow' => array(
+			self::MEDIATYPE_TVSHOW => array(
 				'genreIndex', 
 				'tvEpisodeTerm', 
 				'showTerm', 
@@ -178,7 +188,7 @@ abstract class Zend_Service_Itunes extends Zend_Service_Abstract
 				'ratingIndex', 
 				'descriptionTerm'
 			),
-			'all' => array(
+			self::MEDIATYPE_ALL => array(
 				'actorTerm', 
 				'languageTerm', 
 				'allArtistTerm', 
@@ -235,10 +245,43 @@ abstract class Zend_Service_Itunes extends Zend_Service_Abstract
 	protected $_resultFormat = self::RESULT_JSON;
 	
 	/**
-	 * Custom limit for results
+	 * Default limit for results
 	 * @var $_limit integer
 	 */
-	protected $_limit = -1;
+	protected $_limit = 50;
+	
+	/**
+	 * Name of the custom callback Javascript function
+	 * which can be used in combination with getRawRequestUrl()
+	 * 
+	 * @var $_callback string
+	 */
+	protected $_callback = '';
+	
+	/**
+	 * Complete assembled request url.
+	 * 
+	 * @var $_rawRequestUrl string
+	 */
+	protected $_rawRequestUrl = '';
+	
+	/**
+	 * The iTunes Store search result key version you want to receive back from your search.
+	 * 
+	 * @var $_version integer
+	 */
+	protected $_version = 2;
+	
+	/**
+	 * A flag indicating whether or not you want the iTunes Store to include explicit content in your search results.
+	 * 
+	 * @var $_explicit string
+	 */
+	protected $_explicit = 'yes';
+	
+	protected $_explicitTypes = array(
+		'yes', 'no'
+	);
 	
 	/**
 	 * Default constructor
@@ -296,7 +339,16 @@ abstract class Zend_Service_Itunes extends Zend_Service_Abstract
 	 */
 	public function queryService()
 	{
-		$this->_clientInstance->setUri($this->_buildRequestUri());
+		// cannot be called when callback is set
+		if(!empty($this->_callback))
+		{
+			require_once 'Zend/Service/Itunes/Exception.php';
+			throw new Zend_Service_Itunes_Exception('Cannot run queryService when callback is set.');
+		}
+		
+		$this->_buildRequestUri();
+		
+		$this->_clientInstance->setUri($this->_rawRequestUrl);
 		
 		$queryResult = $this->_clientInstance->request()->getBody();
 		if($this->_resultFormat === self::RESULT_ARRAY)
@@ -460,7 +512,7 @@ abstract class Zend_Service_Itunes extends Zend_Service_Abstract
 	 * @param integer $limit
 	 * @return Zend_Service_Itunes Provides a fluent interface
 	 */
-	public function setLimit($limit = -1)
+	public function setLimit($limit = 50)
 	{
 		$this->_limit = (int)$limit;
 		
@@ -498,6 +550,103 @@ abstract class Zend_Service_Itunes extends Zend_Service_Abstract
 			// check if value exists for key
 			if(in_array($entity[$key], $this->_entityList[$key]))
 				$this->_entity = $entity;
+		}
+		
+		return $this;
+	}
+	
+	/**
+	 * Get the set attribute
+	 */
+	public function getAttribute()
+	{
+		return $this->_attribute;
+	}
+	
+	/**
+	 * Set the attribute you want to search in the iTunes
+	 * store.
+	 * This is relative to the set media type.
+	 * 
+	 * @param string $attribute
+	 */
+	public function setAttribute($attribute = '')
+	{
+		require_once 'Zend/Service/Itunes/Exception.php';
+		
+		if(empty($this->_mediaType))
+		{
+			throw new Zend_Service_Itunes_Exception('Attribute is relative to set media type. No media type set.');
+		}
+
+		// check if the attribute is in the set of attributes for media type
+		if(in_array($attribute, $this->_attributesTypes[$this->_mediaType]))
+		{
+			$this->_attribute = $attribute;
+		}
+		else
+		{
+			throw new Zend_Service_Itunes_Exception('Attribute is not in the set of attributes for this media type.');
+		}
+	}
+	
+	/**
+	 * Get the custom set callback function
+	 * 
+	 * @return string
+	 */
+	public function getCallback()
+	{
+		return $this->_callback;
+	}
+	
+	/**
+	 * Set a custom callback function you want to use
+	 * when returning search results.
+	 * 
+	 * @param string $callback
+	 */
+	public function setCallback($callback = '')
+	{
+		$this->_callback = $callback;
+	}
+	
+	/**
+	 * Get complete assembled request url.
+	 * 
+	 * @return string
+	 */
+	public function getRawRequestUrl()
+	{
+		if(empty($this->_rawRequestUrl))
+			$this->_buildRequestUri();
+			
+		return $this->_rawRequestUrl;
+	}
+	
+	/**
+	 * Get the flag indicating whether or not you want to include
+	 * explicit content in your search result.
+	 * 
+	 * @return string
+	 */
+	public function getExplicitSetting()
+	{
+		return $this->_explicit;
+	}
+	
+	/**
+	 * Set the flag indicating whether or not you want to include
+	 * explicit content in your search result
+	 * 
+	 * @param string $setting
+	 * @return Zend_Service_Itunes Provides a fluent interface
+	 */
+	public function setExplicitSetting($setting = 'yes')
+	{
+		if(in_array($setting, $this->_explicitTypes))
+		{
+			$this->_explicit = $setting;
 		}
 		
 		return $this;
