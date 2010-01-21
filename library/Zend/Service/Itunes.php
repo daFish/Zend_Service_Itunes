@@ -330,7 +330,8 @@ abstract class Zend_Service_ItunesAbstract extends Zend_Service_Abstract
     /**
      * Set configuration
      * 
-     * @param array $options
+     * @param   array $options
+     * @return  void
      */
     public function setOptions (array $options)
     {
@@ -383,6 +384,8 @@ abstract class Zend_Service_ItunesAbstract extends Zend_Service_Abstract
     
     /**
      * Build the request uri for all common parameters
+     * 
+     * @return  void
      */
     protected function _buildRequestUri()
     {
@@ -448,6 +451,8 @@ abstract class Zend_Service_ItunesAbstract extends Zend_Service_Abstract
     
     /**
      * Get the result count from query()
+     * 
+     * @return  void
      */
     public function getResultCount()
     {
@@ -579,6 +584,8 @@ abstract class Zend_Service_ItunesAbstract extends Zend_Service_Abstract
     
     /**
      * Return the entity for the result
+     * 
+     * @return  string
      */
     public function getEntity()
     {
@@ -615,6 +622,8 @@ abstract class Zend_Service_ItunesAbstract extends Zend_Service_Abstract
     
     /**
      * Get the set attribute
+     * 
+     * @return  string
      */
     public function getAttribute()
     {

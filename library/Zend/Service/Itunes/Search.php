@@ -30,7 +30,8 @@ class Zend_Service_Itunes_Search extends Zend_Service_ItunesAbstract
      * Builds the request uri for parameters specifically used in:
      *     - Zend_Service_Itunes_Search
      * 
-     * @throws Zend_Service_Itunes_Exception
+     * @throws  Zend_Service_Itunes_Exception
+     * @return  void
      */
     protected function _buildSpecificRequestUri()
     {

@@ -48,7 +48,8 @@ class Zend_Service_Itunes_Lookup extends Zend_Service_ItunesAbstract
      * Builds the request uri for parameters specifically used in:
      *     - Zend_Service_Itunes_Lookup
      * 
-     * @throws Zend_Service_Itunes_Exception
+     * @throws  Zend_Service_Itunes_Exception
+     * @return  void
      */
     protected function _buildSpecificRequestUri() 
     {
@@ -125,7 +126,7 @@ class Zend_Service_Itunes_Lookup extends Zend_Service_ItunesAbstract
     /**
      * Get all set amgArtistIds
      * 
-     * return array
+     * @return array
      */
     public function getAmgArtistIds()
     {
