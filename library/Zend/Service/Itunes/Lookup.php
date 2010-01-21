@@ -27,7 +27,16 @@ class Zend_Service_Itunes_Lookup extends Zend_Service_Itunes {
 	 */
 	protected $_amgArtistIds = array();
 	
-	public function __construct($options)
+	/**
+	 * Resetting any entities set by the parent class.
+	 * This is due to the standard request format for
+	 * any lookup.
+	 * 
+	 * @var $_entity string
+	 */
+	protected $_entity = '';
+	
+	public function __construct($options = null)
 	{
 		parent::__construct($options);
 		
@@ -35,12 +44,19 @@ class Zend_Service_Itunes_Lookup extends Zend_Service_Itunes {
 	}
 	
 	/**
-	 * 
+	 * Builds the request uri for parameters specifically used in:
+	 * 	- Zend_Service_Itunes_Lookup
 	 */
-	protected function _buildRequestUri() 
+	protected function _buildSpecificRequestUri() 
 	{
-		require_once 'Zend/Service/Itunes/Exception.php';
+		$requestParameters = array();
 		
+		// trigger parent::_buildRequestUri
+		$_uri = parent::_buildRequestUri();
+		if(!empty($_uri))
+			$requestParameters[] = $_uri;
+		
+		require_once 'Zend/Service/Itunes/Exception.php';
 		if($this->_lookupId === 0 XOR !empty($this->_amgArtistIds))
 		{
 			throw new Zend_Service_Itunes_Exception('There is no lookupId or amgArtistId set.');
@@ -52,23 +68,20 @@ class Zend_Service_Itunes_Lookup extends Zend_Service_Itunes {
 			throw new Zend_Service_Itunes_Exception('Please use either lookupId or amgArtistId.');
 		}
 		
-		$requestParameters = array();
 		
+		
+		// add lookupId
 		if($this->_lookupId > 0)
 			$requestParameters[] = 'id=' . $this->_lookupId;
 		
+		// add amgArtistIds if present
 		if(!empty($this->_amgArtistIds))
 			$requestParameters[] = 'amgArtistId=' . implode(',', $this->_amgArtistIds);
 		
-		if(!empty($this->_entity))
-		{
-			$key = array_pop(array_keys($this->_entity));
-			$requestParameters[] = 'entity=' . $this->_entity[$key];
-		}
-			
+		// build request parameter string
 		$request = implode('&', $requestParameters);
-
-		return self::BASE_URI . $request;
+		
+		$this->_rawRequestUrl = self::BASE_URI . $request;
 	}
 	
 	/**
@@ -84,6 +97,11 @@ class Zend_Service_Itunes_Lookup extends Zend_Service_Itunes {
 		return $this;
 	}
 	
+	/**
+	 * Get the set lookupId
+	 * 
+	 * @return integer
+	 */
 	public function getLookupId()
 	{
 		return $this->_lookupId;

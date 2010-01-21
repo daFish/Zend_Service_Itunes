@@ -248,7 +248,7 @@ abstract class Zend_Service_Itunes extends Zend_Service_Abstract
 	 * Default limit for results
 	 * @var $_limit integer
 	 */
-	protected $_limit = 50;
+	protected $_limit = 0;
 	
 	/**
 	 * Name of the custom callback Javascript function
@@ -346,7 +346,7 @@ abstract class Zend_Service_Itunes extends Zend_Service_Abstract
 			throw new Zend_Service_Itunes_Exception('Cannot run queryService when callback is set.');
 		}
 		
-		$this->_buildRequestUri();
+		$this->_buildSpecificRequestUri();
 		
 		$this->_clientInstance->setUri($this->_rawRequestUrl);
 		
@@ -370,9 +370,60 @@ abstract class Zend_Service_Itunes extends Zend_Service_Abstract
 	}
 	
 	/**
-	 * Build the request uri
+	 * Build the request uri for all common parameters
 	 */
-	protected abstract function _buildRequestUri();
+	protected function _buildRequestUri()
+	{
+		$requestParameters = array();
+		
+		// add entity
+		if(!empty($this->_entity))
+		{
+			$key = array_pop(array_keys($this->_entity));
+			$requestParameters[] = 'entity=' . $this->_entity[$key];
+		}
+		
+		// add media type
+		if(!empty($this->_mediaType))
+			$requestParameters[] = 'media=' . $this->_mediaType;
+		
+		// add attribute
+		if(!empty($this->_attribute))
+			$requestParameters[] = 'attribute=' . $this->_attribute;
+		
+		// add language
+		if(!empty($this->_language))
+			$requestParameters[] = 'lang=' . $this->_language;	
+		
+		// add limit
+		if($this->_limit > 0)
+			$requestParameters[] = 'limit=' . $this->_limit;
+			
+		// add country
+		if($this->_country != 'us')
+			$requestParameters[] = 'country=' . $this->_country;
+		
+		// add callback
+		if(!empty($this->_callback))
+			$requestParameters[] = 'callback=' . $this->_callback;
+		
+		// add version
+		if($this->_version <> 2)
+			$requestParameters[] = 'version=' . $this->_version;
+			
+		// add explicity
+		if($this->_explicit != 'yes')
+			$requestParameters[] = 'explicit=' . $this->_explicit;
+			
+		return implode('&', $requestParameters);
+	}
+	
+	/**
+	 * Builds the request uri for parameters specifically used in:
+	 * 	- Zend_Service_Itunes_Lookup
+	 * 	- Zend_Service_Itunes_Search
+	 */
+	protected abstract function _buildSpecificRequestUri();
 	
 	/**
 	 * Get the results from query()
@@ -619,7 +670,7 @@ abstract class Zend_Service_Itunes extends Zend_Service_Abstract
 	public function getRawRequestUrl()
 	{
 		if(empty($this->_rawRequestUrl))
-			$this->_buildRequestUri();
+			$this->_buildSpecificRequestUri();
 			
 		return $this->_rawRequestUrl;
 	}
@@ -647,6 +698,30 @@ abstract class Zend_Service_Itunes extends Zend_Service_Abstract
 		if(in_array($setting, $this->_explicitTypes))
 		{
 			$this->_explicit = $setting;
+		}
+		
+		return $this;
+	}
+	
+	/**
+	 * Get the iTunes Store search result key version you want to receive back from your search.
+	 */
+	public function getVersion()
+	{
+		return $this->_version;
+	}
+	
+	/**
+	 * Set the iTunes Store search result key version you want to receive back from your search.
+	 * 
+	 * @param integer $version
+	 * @return Zend_Service_Itunes Provides a fluent interface
+	 */
+	public function setVersion($version = 2)
+	{
+		if(!in_array($version, array(1,2)))
+		{
+			$this->_version = $version;
 		}
 		
 		return $this;
