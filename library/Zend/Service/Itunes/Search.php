@@ -52,7 +52,7 @@ class Zend_Service_Itunes_Search extends Zend_Service_ItunesAbstract
             implode('+', array_map('urlencode', $this->_searchTerms));
         
         // build request parameter string
-        $request .= implode('&', $requestParameters);
+        $request = implode('&', $requestParameters);
         
         $this->_rawRequestUrl = self::BASE_URI . $request;
     }
