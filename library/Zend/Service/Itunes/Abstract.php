@@ -2,7 +2,7 @@
 
 require_once('Zend/Service/Abstract.php');
 
-abstract class Zend_Service_ItunesAbstract extends Zend_Service_Abstract
+abstract class Zend_Service_Itunes_Abstract extends Zend_Service_Abstract
 {
     /**
      * Result set data

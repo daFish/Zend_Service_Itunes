@@ -1,8 +1,8 @@
 <?php
 
-require_once ('Zend/Service/Itunes.php');
+require_once ('Zend/Service/Itunes/Abstract.php');
 
-class Zend_Service_Itunes_Search extends Zend_Service_ItunesAbstract
+class Zend_Service_Itunes_Search extends Zend_Service_Itunes_Abstract
 {
 
     const BASE_URI = 'http://ax.phobos.apple.com.edgesuite.net/WebObjects/MZStoreServices.woa/wa/wsSearch?';
