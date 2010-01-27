@@ -2,6 +2,13 @@
 
 require_once('Zend/Service/Abstract.php');
 
+/**
+ * @category   Zend
+ * @package    Zend_Service
+ * @subpackage Itunes
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @license    http://framework.zend.com/license/new-bsd     New BSD License
+ */
 abstract class Zend_Service_Itunes_Abstract extends Zend_Service_Abstract
 {
     /**
@@ -351,9 +358,9 @@ abstract class Zend_Service_Itunes_Abstract extends Zend_Service_Abstract
      * 
      * @uses    Zend_Service_Itunes::_buildRequestUri()
      * @throws  Zend_Service_Itunes_Exception
-     * @return  Zend_Service_Itunes Provides a fluent interface
+     * @return  void|Zend_Service_Itunes_Search_Result
      */
-    public function queryService()
+    public function query()
     {
         // cannot be called when callback is set
         if (!empty($this->_callback)) {
@@ -364,13 +371,13 @@ abstract class Zend_Service_Itunes_Abstract extends Zend_Service_Abstract
         
         $this->_buildSpecificRequestUri();
         
-        $this->_clientInstance->setUri($this->_rawRequestUrl);
+        self::getHttpClient()->setUri($this->_rawRequestUrl);
         
         $queryResult = $this->_clientInstance->request()->getBody();
         if ($this->_resultFormat === self::RESULT_ARRAY) {
-            $tmp = Zend_Json::decode($queryResult);
-            $this->_results = $tmp['results'];
-            $this->_resultCount = (int)$tmp['resultCount'];
+            $resultSet = new Zend_Service_Itunes_ResultSet($queryResult);
+        
+            return $resultSet;
         } else {
             // convert JSON-string to array
             $jsonString = Zend_Json::decode($queryResult);
@@ -378,8 +385,6 @@ abstract class Zend_Service_Itunes_Abstract extends Zend_Service_Abstract
             $this->_resultCount = (int)$jsonString['resultCount'];
             $this->_results = Zend_Json::encode($jsonString['results']);
         }
-        
-        return $this;
     }
     
     /**
@@ -398,37 +403,45 @@ abstract class Zend_Service_Itunes_Abstract extends Zend_Service_Abstract
         }
         
         // add media type
-        if (!empty($this->_mediaType))
+        if (!empty($this->_mediaType)) {
             $requestParameters[] = 'media=' . $this->_mediaType;
+        }
         
         // add attribute
-        if (!empty($this->_attribute))
+        if (!empty($this->_attribute)) {
             $requestParameters[] = 'attribute=' . $this->_attribute;
+        }
         
         // add language
-        if (!empty($this->_language))
+        if (!empty($this->_language)) {
             $requestParameters[] = 'lang=' . $this->_language;    
+        }
         
         // add limit
-        if ($this->_limit > 0)
+        if ($this->_limit > 0) {
             $requestParameters[] = 'limit=' . $this->_limit;
-            
+        }
+        
         // add country
-        if ($this->_country != 'us')
+        if ($this->_country != 'us') {
             $requestParameters[] = 'country=' . $this->_country;
+        }
         
         // add callback
-        if (!empty($this->_callback))
+        if (!empty($this->_callback)) {
             $requestParameters[] = 'callback=' . $this->_callback;
+        }
         
         // add version
-        if ($this->_version <> 2)
+        if ($this->_version <> 2) {
             $requestParameters[] = 'version=' . $this->_version;
-            
+        }
+        
         // add explicity
-        if ($this->_explicit != 'yes')
+        if ($this->_explicit != 'yes') {
             $requestParameters[] = 'explicit=' . $this->_explicit;
-            
+        }
+        
         return implode('&', $requestParameters);
     }
     
@@ -440,13 +453,21 @@ abstract class Zend_Service_Itunes_Abstract extends Zend_Service_Abstract
     protected abstract function _buildSpecificRequestUri();
     
     /**
-     * Get the results from query()
+     * Magic method for retrieving properties
      * 
-     * @return array|string
+     * @param   string    $key
+     * @return  mixed
      */
     public function getResults()
     {
-        return $this->_results;
+        if ($this->_resultFormat == self::RESULT_JSON) {
+            return $this->_results;
+        } else {
+            require_once 'Zend/Service/Itunes/Exception.php';
+            throw 
+                new Zend_Service_Itunes_Exception("Cannot call '"
+                . __METHOD__ . "' when using JSON");
+        }
     }
     
     /**
@@ -456,7 +477,14 @@ abstract class Zend_Service_Itunes_Abstract extends Zend_Service_Abstract
      */
     public function getResultCount()
     {
-        return $this->_resultCount;
+        if ($this->_resultFormat == self::RESULT_JSON) {
+            return $this->_resultCount;
+        } else {
+            require_once 'Zend/Service/Itunes/Exception.php';
+            throw 
+                new Zend_Service_Itunes_Exception("Cannot call '"
+                . __METHOD__ . "' when using JSON");
+        }
     }
     
     /**

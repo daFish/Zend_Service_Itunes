@@ -2,9 +2,20 @@
 
 require_once ('Zend/Service/Itunes/Abstract.php');
 
+/**
+ * @category   Zend
+ * @package    Zend_Service
+ * @subpackage Itunes
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @license    http://framework.zend.com/license/new-bsd     New BSD License
+ */
 class Zend_Service_Itunes_Search extends Zend_Service_Itunes_Abstract
 {
-
+    /**
+     * URI for search service
+     * 
+     * @var string
+     */
     const BASE_URI = 'http://ax.phobos.apple.com.edgesuite.net/WebObjects/MZStoreServices.woa/wa/wsSearch?';
     
     /**
