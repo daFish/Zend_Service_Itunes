@@ -80,8 +80,7 @@ class Zend_Service_Itunes_ResultSet implements SeekableIterator
     {
         $this->_position = $position;
         
-        if(!$this->valid())
-        {
+        if (!$this->valid()) {
             throw new OutOfBoundsException('Invalid seek position.');
         }
     }

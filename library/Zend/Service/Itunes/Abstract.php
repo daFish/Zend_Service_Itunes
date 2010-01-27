@@ -143,8 +143,18 @@ abstract class Zend_Service_Itunes_Abstract extends Zend_Service_Abstract
             ),
     );
     
+    /**
+     * The current attribute
+     * 
+     * @var $_attribute string
+     */
     protected $_attribute = '';
     
+    /**
+     * List of possible attributes
+     * 
+     * @var array
+     */
     protected $_attributesTypes = 
         array(
             self::MEDIATYPE_MOVIE => array(
