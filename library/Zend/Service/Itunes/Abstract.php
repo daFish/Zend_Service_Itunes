@@ -559,7 +559,7 @@ abstract class Zend_Service_Itunes_Abstract extends Zend_Service_Abstract
     public function setMediaType($mediatype = '')
     {
         if (in_array($mediatype, $this->_mediaTypes)) {
-            $this->_options['mediaType'] = $mediatype;
+            $this->_options['mediatype'] = $mediatype;
         }
         
         return $this;
@@ -660,11 +660,19 @@ abstract class Zend_Service_Itunes_Abstract extends Zend_Service_Abstract
     /**
      * Set a custom callback function you want to use
      * when returning search results.
+     * This setting works only when result format is set to
+     * RESULT_JSON
      * 
-     * @param string $callback
+     * @param   string $callback
+     * @throws  Zend_Service_Itunes_Exception
      */
     public function setCallback($callback = '')
     {
+        if ($this->getResultFormat() !== self::RESULT_JSON) {
+            require_once 'Zend/Service/Itunes/Exception.php';
+            throw new Zend_Service_Itunes_Exception('Callback can only be set with RESULT_JSON');
+        }
+        
         $this->_options['callback'] = $callback;
     }
     
