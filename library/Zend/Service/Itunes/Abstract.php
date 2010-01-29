@@ -25,22 +25,16 @@ abstract class Zend_Service_Itunes_Abstract extends Zend_Service_Abstract
     
     
     protected $_options = array(
-        'country'   => '',
+        'country'   => 'us',
         'language'  => '',
         'mediatype' => '',
-        'entity'    => '',
+        'entity'    => array(self::MEDIATYPE_ALL => 'album'),
         'attribute' => '',
         'limit'     => 0,
         'callback'  => '',
         'version'   => 2,
         'explicit'  => 'yes'
     );
-    
-    /**
-     * Default country for request
-     * @var string
-     */
-    protected $_country = 'us';
     
     /**
      * List of countries were iTunes is available
@@ -60,31 +54,19 @@ abstract class Zend_Service_Itunes_Abstract extends Zend_Service_Abstract
     );
     
     /**
-     * Default language of the result
-     * @var $_language string
-     */
-    protected $_language = '';
-    
-    /**
      * List of available languages for the result
      * @var $_languageList array
      */
     protected $_languageList = array('en_us', 'ja_jp');
     
-    const MEDIATYPE_ALL         = 'all';
-    const MEDIATYPE_PODCAST     = 'podcast';
-    const MEDIATYPE_MUSIC         = 'music';
-    const MEDIATYPE_MUSICVIDEO     = 'musicVideo';
-    const MEDIATYPE_AUDIOBOOK    = 'audiobook';
-    const MEDIATYPE_SHORTFILM    = 'shortFilm';
-    const MEDIATYPE_TVSHOW        = 'tvShow';
-    const MEDIATYPE_MOVIE        = 'movie';
-    
-    /**
-     * Default media type
-     * @var $_mediaType string
-     */
-    protected $_mediaType = '';
+    const MEDIATYPE_ALL             = 'all';
+    const MEDIATYPE_PODCAST         = 'podcast';
+    const MEDIATYPE_MUSIC           = 'music';
+    const MEDIATYPE_MUSICVIDEO      = 'musicVideo';
+    const MEDIATYPE_AUDIOBOOK       = 'audiobook';
+    const MEDIATYPE_SHORTFILM       = 'shortFilm';
+    const MEDIATYPE_TVSHOW          = 'tvShow';
+    const MEDIATYPE_MOVIE           = 'movie';
     
     /**
      * List of available media types
@@ -99,12 +81,6 @@ abstract class Zend_Service_Itunes_Abstract extends Zend_Service_Abstract
         self::MEDIATYPE_SHORTFILM,
         self::MEDIATYPE_TVSHOW
     );
-    
-    /**
-     * Default entity type
-     * @var array
-     */
-    protected $_entity = array(self::MEDIATYPE_ALL => 'album');
     
     /**
      * List of all available entity types
@@ -155,13 +131,6 @@ abstract class Zend_Service_Itunes_Abstract extends Zend_Service_Abstract
             'allTrack'
             ),
     );
-    
-    /**
-     * The current attribute
-     * 
-     * @var $_attribute string
-     */
-    protected $_attribute = '';
     
     /**
      * List of possible attributes
@@ -291,42 +260,11 @@ abstract class Zend_Service_Itunes_Abstract extends Zend_Service_Abstract
     protected $_resultFormat = self::RESULT_JSON;
     
     /**
-     * Default limit for results
-     * 
-     * @var $_limit integer
-     */
-    protected $_limit = 0;
-    
-    /**
-     * Name of the custom callback Javascript function
-     * which can be used in combination with getRawRequestUrl()
-     * 
-     * @var $_callback string
-     */
-    protected $_callback = '';
-    
-    /**
      * Complete assembled request url.
      * 
      * @var $_rawRequestUrl string
      */
     protected $_rawRequestUrl = '';
-    
-    /**
-     * The iTunes Store search result key version you want to receive 
-     * back from your search.
-     * 
-     * @var $_version integer
-     */
-    protected $_version = 2;
-    
-    /**
-     * A flag indicating whether or not you want the iTunes Store to include 
-     * explicit content in your search results.
-     * 
-     * @var $_explicit string
-     */
-    protected $_explicit = 'yes';
     
     protected $_explicitTypes = array('yes', 'no');
     
@@ -620,14 +558,14 @@ abstract class Zend_Service_Itunes_Abstract extends Zend_Service_Abstract
         }
 
         $key = array_pop(array_keys($entity));
-        
+
         // check if the key of the given array exists
         if (array_key_exists($key, $this->_entityList)) {
             // check if value exists for key
             if(in_array($entity[$key], $this->_entityList[$key]))
                 $this->_options['entity'] = $entity;
         }
-        
+
         return $this;
     }
     
