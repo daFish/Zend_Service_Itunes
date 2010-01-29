@@ -23,6 +23,19 @@ abstract class Zend_Service_Itunes_Abstract extends Zend_Service_Abstract
      */
     protected $_resultCount = 0;
     
+    
+    protected $_options = array(
+        'country'   => '',
+        'language'  => '',
+        'mediatype' => '',
+        'entity'    => '',
+        'attribute' => '',
+        'limit'     => 0,
+        'callback'  => '',
+        'version'   => 2,
+        'explicit'  => 'yes'
+    );
+    
     /**
      * Default country for request
      * @var string
@@ -330,16 +343,9 @@ abstract class Zend_Service_Itunes_Abstract extends Zend_Service_Abstract
         $this->_clientInstance = self::getHttpClient();
         
         /*
-         * Convert Zend_Config argument to config array.
+         * Set options
          */
-        if ($options instanceof Zend_Config) {
-            $options = $options->toArray();
-        }
-        
-        /**
-         * Verify $options is an array
-         */
-        if (is_array($options)) {
+        if (null !== $options) {
             $this->setOptions($options);
         }
     }
@@ -350,17 +356,23 @@ abstract class Zend_Service_Itunes_Abstract extends Zend_Service_Abstract
      * @param   array $options
      * @return  void
      */
-    public function setOptions (array $options)
+    public function setOptions ($options = null)
     {
+        if ($options instanceof Zend_Config) {
+            $options = $options->toArray();
+        }
+
         foreach ($options as $key => $value) {
             $option = str_replace('_', ' ', strtolower($key)); 
             $option = str_replace(' ', '', ucwords($option)); 
             $method = 'set' . $option;
-            
+            echo "Call " . $method . " with " . $value . PHP_EOL;
             if (method_exists($this, $method)) {
                 $this->$method($value);
             }
         }
+        
+        var_dump($this->_options);
     }
     
     /**
@@ -498,13 +510,16 @@ abstract class Zend_Service_Itunes_Abstract extends Zend_Service_Abstract
     }
     
     /**
-     * Return country
+     * Magic method for accessing properties
      * 
-     * @return string
+     * @param   string    $key
+     * @return  mixed
      */
-    public function getCountry()
+    public function __get($key)
     {
-        return $this->_country;
+        if (isset($this->_options[$key])) {
+            return $this->_options[$key];
+        }
     }
     
     /**
@@ -516,20 +531,10 @@ abstract class Zend_Service_Itunes_Abstract extends Zend_Service_Abstract
     public function setCountry($country = '')
     {
         if (in_array($country, $this->_countryList)) {
-            $this->_country = $country;
+            $this->_options['country'] = $country;
         }
         
         return $this;
-    }
-    
-    /**
-     * Return language for result set
-     * 
-     * @return the $_language
-     */
-    public function getLanguage()
-    {
-        return $this->_language;
     }
 
     /**
@@ -541,7 +546,7 @@ abstract class Zend_Service_Itunes_Abstract extends Zend_Service_Abstract
     public function setLanguage($language = '') 
     {
         if (in_array($language, $this->_languageList)) {
-            $this->_language = $language;
+            $this->_options['language'] = $language;
         }
         
         return $this;
@@ -556,20 +561,10 @@ abstract class Zend_Service_Itunes_Abstract extends Zend_Service_Abstract
     public function setMediaType($mediatype = '')
     {
         if (in_array($mediatype, $this->_mediaTypes)) {
-            $this->_mediaType = $mediatype;
+            $this->_options['mediaType'] = $mediatype;
         }
         
         return $this;
-    }
-    
-    /**
-     * Get the actual set mediatype
-     * 
-     * @return string
-     */
-    public function getMediaType()
-    {
-        return $this->_mediaType;
     }
     
     /**
@@ -598,16 +593,6 @@ abstract class Zend_Service_Itunes_Abstract extends Zend_Service_Abstract
     }
     
     /**
-     * Get the actual set limit
-     * 
-     * @return integer
-     */
-    public function getLimit()
-    {
-        return $this->_limit;
-    }
-    
-    /**
      * Set the limit
      * 
      * @param   integer $limit
@@ -615,19 +600,9 @@ abstract class Zend_Service_Itunes_Abstract extends Zend_Service_Abstract
      */
     public function setLimit($limit = 50)
     {
-        $this->_limit = (int)$limit;
+        $this->_options['limit'] = (int)$limit;
         
         return $this;
-    }
-    
-    /**
-     * Return the entity for the result
-     * 
-     * @return  string
-     */
-    public function getEntity()
-    {
-        return $this->_entity;
     }
     
     /**
@@ -645,27 +620,17 @@ abstract class Zend_Service_Itunes_Abstract extends Zend_Service_Abstract
             throw new Zend_Service_Itunes_Exception('Must be set with 
                 one key/value-pair!');
         }
-        
+
         $key = array_pop(array_keys($entity));
         
         // check if the key of the given array exists
         if (array_key_exists($key, $this->_entityList)) {
             // check if value exists for key
             if(in_array($entity[$key], $this->_entityList[$key]))
-                $this->_entity = $entity;
+                $this->_options['entity'] = $entity;
         }
         
         return $this;
-    }
-    
-    /**
-     * Get the set attribute
-     * 
-     * @return  string
-     */
-    public function getAttribute()
-    {
-        return $this->_attribute;
     }
     
     /**
@@ -680,28 +645,18 @@ abstract class Zend_Service_Itunes_Abstract extends Zend_Service_Abstract
     {
         require_once 'Zend/Service/Itunes/Exception.php';
         
-        if (empty($this->_mediaType)) {
+        if (empty($this->_options['mediaType'])) {
             throw new Zend_Service_Itunes_Exception('Attribute is relative to 
                 set media type. No media type set.');
         }
 
         // check if the attribute is in the set of attributes for media type
         if (in_array($attribute, $this->_attributesTypes[$this->_mediaType])) {
-            $this->_attribute = $attribute;
+            $this->_options['attribute'] = $attribute;
         } else {
             throw new Zend_Service_Itunes_Exception('Attribute is not in the 
                 set of attributes for this media type.');
         }
-    }
-    
-    /**
-     * Get the custom set callback function
-     * 
-     * @return string
-     */
-    public function getCallback()
-    {
-        return $this->_callback;
     }
     
     /**
@@ -712,7 +667,7 @@ abstract class Zend_Service_Itunes_Abstract extends Zend_Service_Abstract
      */
     public function setCallback($callback = '')
     {
-        $this->_callback = $callback;
+        $this->_options['callback'] = $callback;
     }
     
     /**
@@ -729,41 +684,19 @@ abstract class Zend_Service_Itunes_Abstract extends Zend_Service_Abstract
     }
     
     /**
-     * Get the flag indicating whether or not you want to include
-     * explicit content in your search result.
-     * 
-     * @return string
-     */
-    public function getExplicitSetting()
-    {
-        return $this->_explicit;
-    }
-    
-    /**
      * Set the flag indicating whether or not you want to include
      * explicit content in your search result
      * 
      * @param   string $setting
      * @return  Zend_Service_Itunes Provides a fluent interface
      */
-    public function setExplicitSetting($setting = 'yes')
+    public function setExplicit($setting = 'yes')
     {
         if (in_array($setting, $this->_explicitTypes)) {
-            $this->_explicit = $setting;
+            $this->_options['explicit'] = $setting;
         }
         
         return $this;
-    }
-    
-    /**
-     * Get the iTunes Store search result key version you want 
-     * to receive back from your search.
-     * 
-     * @return integer
-     */
-    public function getVersion()
-    {
-        return $this->_version;
     }
     
     /**
@@ -776,7 +709,7 @@ abstract class Zend_Service_Itunes_Abstract extends Zend_Service_Abstract
     public function setVersion($version = 2)
     {
         if (!in_array($version, array(1,2))) {
-            $this->_version = $version;
+            $this->_options['version'] = $version;
         }
         
         return $this;
