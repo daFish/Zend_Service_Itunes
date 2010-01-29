@@ -366,13 +366,11 @@ abstract class Zend_Service_Itunes_Abstract extends Zend_Service_Abstract
             $option = str_replace('_', ' ', strtolower($key)); 
             $option = str_replace(' ', '', ucwords($option)); 
             $method = 'set' . $option;
-            echo "Call " . $method . " with " . $value . PHP_EOL;
+
             if (method_exists($this, $method)) {
                 $this->$method($value);
             }
         }
-        
-        var_dump($this->_options);
     }
     
     /**
@@ -708,7 +706,7 @@ abstract class Zend_Service_Itunes_Abstract extends Zend_Service_Abstract
      */
     public function setVersion($version = 2)
     {
-        if (!in_array($version, array(1,2))) {
+        if (in_array($version, array(1, 2))) {
             $this->_options['version'] = $version;
         }
         
