@@ -4,9 +4,14 @@ Zend_Service_Itunes
 This component provides an way to query the iTunes Web Service API by implementing all functions provided in the 
 'iTunes Store Web Service API' (http://www.apple.com/itunesaffiliates/API/AffiliatesSearch2.1.pdf).
 
+Changelog:
+----------
+
+- moved result handling for Zend_Service_Itunes::RESULT_ARRAY into own
+classes which implement the SeekableIterator-interface
+
 ToDo:
 -----
 
 - add test cases
-- add use cases
-- format code to reflect Zend Coding standards
+- add more use cases
