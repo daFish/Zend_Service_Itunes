@@ -17,11 +17,6 @@ class Zend_Service_Itunes_Lookup extends Zend_Service_Itunes_Abstract
      * @var string
      */
     const BASE_URI = 'http://ax.phobos.apple.com.edgesuite.net/WebObjects/MZStoreServices.woa/wa/wsLookup?';
-
-    /**
-     * @var Zend_Http_Client
-     */
-    protected $_clientInstance = null;
     
     /**
      * Lookup can be either:
@@ -48,11 +43,14 @@ class Zend_Service_Itunes_Lookup extends Zend_Service_Itunes_Abstract
      */
     protected $_entity = '';
     
+    /**
+     * Constructor
+     * 
+     * @param $options
+     */
     public function __construct($options = null)
     {
         parent::__construct($options);
-        
-        $this->_clientInstance = parent::getHttpClient();
     }
     
     /**

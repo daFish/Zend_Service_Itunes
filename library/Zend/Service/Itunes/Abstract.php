@@ -1,6 +1,6 @@
 <?php
 
-require_once('Zend/Service/Abstract.php');
+#require_once('Zend/Service/Abstract.php');
 
 /**
  * @category   Zend
@@ -266,6 +266,11 @@ abstract class Zend_Service_Itunes_Abstract extends Zend_Service_Abstract
      */
     protected $_rawRequestUrl = '';
     
+    /**
+     * Array of explicity settings
+     * 
+     * @var array
+     */
     protected $_explicitTypes = array('yes', 'no');
     
     /**
@@ -331,7 +336,7 @@ abstract class Zend_Service_Itunes_Abstract extends Zend_Service_Abstract
         
         self::getHttpClient()->setUri($this->_rawRequestUrl);
         
-        $queryResult = $this->_clientInstance->request()->getBody();
+        $queryResult = self::getHttpClient()->request()->getBody();
         if ($this->_resultFormat === self::RESULT_ARRAY) {
             $resultSet = new Zend_Service_Itunes_ResultSet($queryResult);
         

@@ -1,7 +1,5 @@
 <?php
 
-require_once ('Zend/Service/Itunes/Abstract.php');
-
 /**
  * @category   Zend
  * @package    Zend_Service
@@ -19,22 +17,20 @@ class Zend_Service_Itunes_Search extends Zend_Service_Itunes_Abstract
     const BASE_URI = 'http://ax.phobos.apple.com.edgesuite.net/WebObjects/MZStoreServices.woa/wa/wsSearch?';
     
     /**
-     * @var Zend_Http_Client
-     */
-    protected $_clientInstance = null;
-    
-    /**
      * Query term array
      * 
      * @var     array
      */
     protected $_searchTerms = array();
     
+    /**
+     * Constructor
+     * 
+     * @param $options
+     */
     public function __construct($options = null)
     {
         parent::__construct($options);
-        
-        $this->_clientInstance = parent::getHttpClient();
     }
     
     /**
