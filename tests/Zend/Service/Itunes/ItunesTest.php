@@ -1,0 +1,197 @@
+<?php
+if (!defined('PHPUnit_MAIN_METHOD')) {
+    define('PHPUnit_MAIN_METHOD', 'Zend_Service_ItunesTest::main');
+}
+
+require_once '../../../bootstrap.php';
+
+/** Zend_Service_Itunes */
+require_once 'Zend/Service/Itunes/Search.php';
+
+/** Zend_Http_Client */
+require_once 'Zend/Http/Client.php';
+
+/** Zend_Http_Client_Adapter_Test */
+require_once 'Zend/Http/Client/Adapter/Test.php';
+
+class Zend_Service_Itunes_SearchTest extends PHPUnit_Framework_TestCase
+{
+    protected $_filesDir = '';
+    
+    protected $itunesSearch =   null;
+    
+    protected function setUp()
+    {
+        $this->itunesSearch = new Zend_Service_Itunes_Search();
+        
+        $this->_filesDir = dirname(__FILE__) . '/_files/';
+    }
+
+    /**
+     * Runs the test methods of this class.
+     *
+     * @return void
+     */
+    public static function main()
+    {
+        $suite = new PHPUnit_Framework_TestSuite(__CLASS__);
+        $result = PHPUnit_TextUI_TestRunner::run($suite);
+    }
+    
+    /**
+     * Test setting of options using .ini-file
+     */
+    public function testSetOptionsWithIniFile()
+    {
+        $config = new Zend_Config_Ini($this->_filesDir . 'settings.ini', 'Itunes');
+        $this->itunesSearch->setOptions($config);
+        
+        $this->assertEquals(array('hans', 'zimmer'), $this->itunesSearch->getTerms(), 'Test of terms.');
+        $this->assertEquals('de', $this->itunesSearch->country);
+        $this->assertEquals('ja_jp', $this->itunesSearch->language);
+        $this->assertEquals(100, $this->itunesSearch->limit);
+        $this->assertEquals('no', $this->itunesSearch->explicit);
+        $this->assertEquals(1, $this->itunesSearch->version);
+        $this->assertEquals('wbCallback', $this->itunesSearch->callback, 'Testing callback setting');
+    }
+    
+    /**
+     * Test setter and getter for terms
+     */
+    public function testSetGetTerms()
+    {
+        $this->itunesSearch->setTerms(array('christopher', 'gordon'));
+        $this->assertEquals(array('christopher', 'gordon'), $this->itunesSearch->getTerms());
+    }
+    
+    /**
+     * Test setter and getter for limit
+     */
+    public function testSetGetLimit()
+    {
+        $this->itunesSearch->setLimit(42);
+        $this->assertEquals(42, $this->itunesSearch->limit);
+    }
+    
+    /**
+     * Test setter and getter for explicity setting
+     */
+    public function testSetGetExplicity()
+    {
+        $this->itunesSearch->setExplicit('yes');
+        $this->assertEquals('yes', $this->itunesSearch->explicit);
+    }
+    
+    /**
+     * Test setter and getter for callback with RESULT_JSON
+     */
+    public function testSetGetCallback()
+    {
+        $this->itunesSearch->setResultFormat(Zend_Service_Itunes_Abstract::RESULT_JSON);
+        $this->itunesSearch->setCallback('wbFoobar');
+        $this->assertEquals('wbFoobar', $this->itunesSearch->callback);
+    }
+    
+    /**
+     * Test setter and getter for callback with RESULT_ARRAY
+     * and expect exception
+     */
+    public function testSetGetCallbackException()
+    {
+        try {
+            $this->itunesSearch->setResultFormat(Zend_Service_Itunes_Abstract::RESULT_ARRAY);
+            $this->itunesSearch->setCallback('wbFoobar');
+        }
+        catch (Zend_Service_Itunes_Exception $e) {
+            return;
+        }
+        
+        $this->fail('An expected exception has not been raised!');
+    }
+    
+    /**
+     * Test setter and getter for country
+     */
+    public function testSetGetCountry()
+    {
+        $this->itunesSearch->setCountry('gb');
+        $this->assertEquals('gb', $this->itunesSearch->country);
+    }
+    
+    /**
+     * Test setter and getter for unknown country
+     * resulting in emtpy country string (uses webservice
+     * defined default of 'us')
+     */
+    public function testSetGetCountryOutOfRange()
+    {
+        $this->itunesSearch->setCountry('ddr');
+        $this->assertEquals('us', $this->itunesSearch->country);
+    }
+    
+    /**
+     * Test setter and getter for language
+     */
+    public function testSetGetLanguage()
+    {
+        $this->itunesSearch->setLanguage('ja_jp');
+        $this->assertEquals('ja_jp', $this->itunesSearch->language);
+    }
+    
+    /**
+     * Test setter and getter media type
+     */
+    public function testSetGetMediaType()
+    {
+        $this->itunesSearch->setMediaType(Zend_Service_Itunes_Abstract::MEDIATYPE_TVSHOW);
+        $this->assertEquals(Zend_Service_Itunes_Abstract::MEDIATYPE_TVSHOW, $this->itunesSearch->mediatype);
+    }
+    
+    /**
+     * Test setter and getter for result format
+     */
+    public function testSetGetResultFormat()
+    {
+        $this->itunesSearch->setResultFormat(Zend_Service_Itunes_Abstract::RESULT_ARRAY);
+        $this->assertEquals(Zend_Service_Itunes_Abstract::RESULT_ARRAY, $this->itunesSearch->getResultFormat());
+    }
+    
+    /**
+     * Test setter and getter for entity type
+     */
+    public function testSetGetEntity()
+    {
+        $this->itunesSearch->setEntity(array('music' => 'musicVideo'));
+        $this->assertEquals(array('music' => 'musicVideo'), $this->itunesSearch->entity);
+    }
+    
+    /**
+     * Test set entity with empty array
+     */
+    public function testSetEntityExceptionCountToLow()
+    {
+        try {
+            $this->itunesSearch->setEntity();
+        }
+        catch (Zend_Service_Itunes_Exception $e) {
+            return;
+        }
+        
+        $this->fail('An expected exception has not been raised!');
+    }
+    
+    /**
+     * Test set entity with array count of 2
+     */
+    public function testSetEntityExceptionCountToHigh()
+    {
+        try {
+            $this->itunesSearch->setEntity(array('foo' => 'bar', 'lorem' => 'ipsum'));
+        }
+        catch (Zend_Service_Itunes_Exception $e) {
+            return;
+        }
+        
+        $this->fail('An expected exception has not been raised!');
+    }
+}
