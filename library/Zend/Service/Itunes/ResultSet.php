@@ -24,7 +24,7 @@ class Zend_Service_Itunes_ResultSet implements SeekableIterator
     protected $_position = 0;
     
     /**
-     * Construcotr
+     * Constructor
      * 
      * @param array $result
      */
