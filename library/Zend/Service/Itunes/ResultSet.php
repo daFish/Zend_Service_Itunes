@@ -28,7 +28,7 @@ class Zend_Service_Itunes_ResultSet implements SeekableIterator
      * 
      * @param array $result
      */
-    public function __construct(array $result)
+    public function __construct($result = null)
     {
         $results = Zend_Json::decode($result);
         $this->_results = $results['results'];
