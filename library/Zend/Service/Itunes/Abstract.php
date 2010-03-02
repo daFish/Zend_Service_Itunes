@@ -327,9 +327,7 @@ abstract class Zend_Service_Itunes_Abstract extends Zend_Service_Abstract
     {
         // cannot be called when callback is set
         if (!empty($this->_callback)) {
-            require_once 'Zend/Service/Itunes/Exception.php';
-            throw new Zend_Service_Itunes_Exception('Cannot run queryService 
-                when callback is set.');
+            throw new Zend_Service_Itunes_Exception('Cannot run queryService when callback is set.');
         }
         
         $this->_buildSpecificRequestUri();
@@ -427,10 +425,7 @@ abstract class Zend_Service_Itunes_Abstract extends Zend_Service_Abstract
         if ($this->_resultFormat == self::RESULT_JSON) {
             return $this->_results;
         } else {
-            require_once 'Zend/Service/Itunes/Exception.php';
-            throw 
-                new Zend_Service_Itunes_Exception("Cannot call '"
-                . __METHOD__ . "' when using JSON");
+            throw new Zend_Service_Itunes_Exception("Cannot call '" . __METHOD__ . "' when using JSON");
         }
     }
     
@@ -444,10 +439,7 @@ abstract class Zend_Service_Itunes_Abstract extends Zend_Service_Abstract
         if ($this->_resultFormat == self::RESULT_JSON) {
             return $this->_resultCount;
         } else {
-            require_once 'Zend/Service/Itunes/Exception.php';
-            throw 
-                new Zend_Service_Itunes_Exception("Cannot call '"
-                . __METHOD__ . "' when using JSON");
+            throw new Zend_Service_Itunes_Exception("Cannot call '" . __METHOD__ . "' when using JSON");
         }
     }
     
@@ -558,7 +550,6 @@ abstract class Zend_Service_Itunes_Abstract extends Zend_Service_Abstract
     {
         // check if only one entry is given
         if (count($entity) <> 1) {
-            require_once 'Zend/Service/Itunes/Exception.php';
             throw new Zend_Service_Itunes_Exception('Must be set with 
                 one key/value-pair!');
         }
@@ -587,19 +578,15 @@ abstract class Zend_Service_Itunes_Abstract extends Zend_Service_Abstract
      */
     public function setAttribute($attribute = '')
     {
-        require_once 'Zend/Service/Itunes/Exception.php';
-        
         if (empty($this->_options['mediaType'])) {
-            throw new Zend_Service_Itunes_Exception('Attribute is relative to 
-                set media type. No media type set.');
+            throw new Zend_Service_Itunes_Exception('Attribute is relative to set media type. No media type set.');
         }
 
         // check if the attribute is in the set of attributes for media type
         if (in_array($attribute, $this->_attributesTypes[$this->_mediaType])) {
             $this->_options['attribute'] = $attribute;
         } else {
-            throw new Zend_Service_Itunes_Exception('Attribute is not in the 
-                set of attributes for this media type.');
+            throw new Zend_Service_Itunes_Exception('Attribute is not in the set of attributes for this media type.');
         }
     }
     
@@ -615,7 +602,6 @@ abstract class Zend_Service_Itunes_Abstract extends Zend_Service_Abstract
     public function setCallback($callback = '')
     {
         if ($this->getResultFormat() !== self::RESULT_JSON) {
-            require_once 'Zend/Service/Itunes/Exception.php';
             throw new Zend_Service_Itunes_Exception('Callback can only be set with RESULT_JSON');
         }
         
