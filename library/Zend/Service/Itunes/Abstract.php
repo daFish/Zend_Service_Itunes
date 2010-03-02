@@ -360,49 +360,50 @@ abstract class Zend_Service_Itunes_Abstract extends Zend_Service_Abstract
         $requestParameters = array();
         
         // add entity
-        if (!empty($this->_entity)) {
-            $key = array_pop(array_keys($this->_entity));
-            $requestParameters[] = 'entity=' . $this->_entity[$key];
+        if (!empty($this->_options['entity'])) {
+            $tmp = array_keys($this->_options['entity']);
+            $key = array_pop($tmp);
+            $requestParameters[] = 'entity=' . $this->_options['entity'][$key];
         }
         
         // add media type
-        if (!empty($this->_mediaType)) {
-            $requestParameters[] = 'media=' . $this->_mediaType;
+        if (!empty($this->_options['mediaType'])) {
+            $requestParameters[] = 'media=' . $this->_options['mediaType'];
         }
         
         // add attribute
-        if (!empty($this->_attribute)) {
-            $requestParameters[] = 'attribute=' . $this->_attribute;
+        if (!empty($this->_options['attribute'])) {
+            $requestParameters[] = 'attribute=' . $this->_options['attribute'];
         }
         
         // add language
-        if (!empty($this->_language)) {
-            $requestParameters[] = 'lang=' . $this->_language;    
+        if (!empty($this->_options['language'])) {
+            $requestParameters[] = 'lang=' . $this->_options['language'];    
         }
         
         // add limit
-        if ($this->_limit > 0) {
-            $requestParameters[] = 'limit=' . $this->_limit;
+        if ($this->_options['limit'] > 0) {
+            $requestParameters[] = 'limit=' . $this->_options['limit'];
         }
         
         // add country
-        if ($this->_country != 'us') {
-            $requestParameters[] = 'country=' . $this->_country;
+        if ($this->_options['country'] != 'us') {
+            $requestParameters[] = 'country=' . $this->_options['country'];
         }
         
         // add callback
-        if (!empty($this->_callback)) {
-            $requestParameters[] = 'callback=' . $this->_callback;
+        if (!empty($this->_options['callback'])) {
+            $requestParameters[] = 'callback=' . $this->_options['callback'];
         }
         
         // add version
-        if ($this->_version <> 2) {
-            $requestParameters[] = 'version=' . $this->_version;
+        if ($this->_options['version'] <> 2) {
+            $requestParameters[] = 'version=' . $this->_options['version'];
         }
         
         // add explicity
-        if ($this->_explicit != 'yes') {
-            $requestParameters[] = 'explicit=' . $this->_explicit;
+        if ($this->_options['explicit'] != 'yes') {
+            $requestParameters[] = 'explicit=' . $this->_options['explicit'];
         }
         
         return implode('&', $requestParameters);
