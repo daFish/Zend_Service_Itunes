@@ -14,7 +14,7 @@ require_once 'Zend/Http/Client.php';
 /** Zend_Http_Client_Adapter_Test */
 require_once 'Zend/Http/Client/Adapter/Test.php';
 
-class Zend_Service_Itunes_SearchTest extends PHPUnit_Framework_TestCase
+class Zend_Service_Itunes_AbstractTest extends PHPUnit_Framework_TestCase
 {
     protected $_filesDir = '';
     
@@ -161,8 +161,11 @@ class Zend_Service_Itunes_SearchTest extends PHPUnit_Framework_TestCase
      */
     public function testSetGetEntity()
     {
-        $this->itunesSearch->setEntity(array('music' => 'musicVideo'));
-        $this->assertEquals(array('music' => 'musicVideo'), $this->itunesSearch->entity);
+        $temp = array();
+        $temp['music'] = 'musicVideo';
+        
+        $this->itunesSearch->setEntity($temp);
+        $this->assertEquals($temp, $this->itunesSearch->entity);
     }
     
     /**
@@ -186,12 +189,26 @@ class Zend_Service_Itunes_SearchTest extends PHPUnit_Framework_TestCase
     public function testSetEntityExceptionCountToHigh()
     {
         try {
-            $this->itunesSearch->setEntity(array('foo' => 'bar', 'lorem' => 'ipsum'));
+            $temp = array('foo' => 'bar', 'lorem' => 'ipsum');
+            $this->itunesSearch->setEntity($temp);
         }
         catch (Zend_Service_Itunes_Exception $e) {
             return;
         }
         
         $this->fail('An expected exception has not been raised!');
+    }
+    
+    /**
+     * Test set/get version incl. failtest when unvalid version
+     * should be set
+     */
+    public function testSetGetVersion()
+    {
+        $this->itunesSearch->setVersion(1);
+        $this->assertEquals(1, $this->itunesSearch->version);
+        
+        $this->itunesSearch->setVersion(3);
+        $this->assertEquals(1, $this->itunesSearch->version);
     }
 }
