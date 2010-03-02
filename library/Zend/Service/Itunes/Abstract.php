@@ -555,7 +555,7 @@ abstract class Zend_Service_Itunes_Abstract extends Zend_Service_Abstract
      */
     public function setEntity($entity = array())
     {
-        // check if only one key => value pair is given
+        // check if only one entry is given
         if (count($entity) <> 1) {
             require_once 'Zend/Service/Itunes/Exception.php';
             throw new Zend_Service_Itunes_Exception('Must be set with 
