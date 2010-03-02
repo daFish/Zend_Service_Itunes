@@ -562,7 +562,9 @@ abstract class Zend_Service_Itunes_Abstract extends Zend_Service_Abstract
                 one key/value-pair!');
         }
 
-        $key = array_pop(array_keys($entity));
+        // fetch key from parameter
+        $_tmp = array_keys($entity);
+        $key = array_pop($_tmp);
 
         // check if the key of the given array exists
         if (array_key_exists($key, $this->_entityList)) {
