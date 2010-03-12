@@ -18,12 +18,12 @@ class Zend_Service_Itunes_AbstractTest extends PHPUnit_Framework_TestCase
 {
     protected $_filesDir = '';
     
+    /* @var Zend_Service_Itunes_Search */
     protected $itunesSearch =   null;
     
     protected function setUp()
     {
         $this->itunesSearch = new Zend_Service_Itunes_Search();
-        
         $this->_filesDir = dirname(__FILE__) . '/_files/';
     }
 
