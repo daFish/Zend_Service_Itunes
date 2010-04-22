@@ -9,7 +9,7 @@ require_once ('Zend/Service/Itunes/Abstract.php');
  * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
-class Zend_Service_Itunes_Lookup extends Zend_Service_Itunes_Abstract
+class Zend_Service_Itunes_Lookup extends Zend_Service_Itunes_ItunesAbstract
 {
     /**
      * URI for lookup service
