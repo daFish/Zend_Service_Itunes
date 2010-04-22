@@ -21,7 +21,10 @@ abstract class Zend_Service_Itunes_ItunesAbstract extends Zend_Service_Abstract
      */
     protected $_resultCount = 0;
     
-    
+    /**
+     * Properties with default values
+     * @var array
+     */
     protected $_options = array(
         'country'   => 'us',
         'language'  => '',
