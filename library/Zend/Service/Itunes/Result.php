@@ -39,5 +39,7 @@ class Zend_Service_Itunes_Result
         if (isset($this->_result[$key])) {
             return $this->_result[$key];
         }
+        
+        return null;
     }
 }

@@ -1,7 +1,5 @@
 <?php
 
-require_once ('Zend/Service/Itunes/Abstract.php');
-
 /**
  * @category   Zend
  * @package    Zend_Service
@@ -16,7 +14,7 @@ class Zend_Service_Itunes_Lookup extends Zend_Service_Itunes_ItunesAbstract
      * 
      * @var string
      */
-    const BASE_URI = 'http://ax.phobos.apple.com.edgesuite.net/WebObjects/MZStoreServices.woa/wa/wsLookup?';
+    protected $_uri = 'http://ax.phobos.apple.com.edgesuite.net/WebObjects/MZStoreServices.woa/wa/wsLookup?';
     
     /**
      * Lookup can be either:
@@ -93,7 +91,7 @@ class Zend_Service_Itunes_Lookup extends Zend_Service_Itunes_ItunesAbstract
         // build request parameter string
         $request = implode('&', $requestParameters);
         
-        $this->_rawRequestUrl = self::BASE_URI . $request;
+        $this->_rawRequestUrl = $this->getUri() . $request;
     }
     
     /**

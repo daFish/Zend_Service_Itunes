@@ -14,7 +14,7 @@ class Zend_Service_Itunes_Search extends Zend_Service_Itunes_ItunesAbstract
      * 
      * @var string
      */
-    const BASE_URI = 'http://ax.phobos.apple.com.edgesuite.net/WebObjects/MZStoreServices.woa/wa/wsSearch?';
+    protected $_uri = 'http://ax.phobos.apple.com.edgesuite.net/WebObjects/MZStoreServices.woa/wa/wsSearch?';
     
     /**
      * Query term array
@@ -62,7 +62,16 @@ class Zend_Service_Itunes_Search extends Zend_Service_Itunes_ItunesAbstract
         // build request parameter string
         $request = implode('&', $requestParameters);
         
-        $this->_rawRequestUrl = self::BASE_URI . $request;
+        $this->_rawRequestUrl = $this->getUri() . $request;
+    }
+    
+    public function getRawRequestUrl()
+    {
+        if ($this->_rawRequestUrl == '') {
+            $this->_buildSpecificRequestUri();
+        }
+        
+        return $this->_rawRequestUrl;
     }
     
     /**

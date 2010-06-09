@@ -40,6 +40,14 @@ class Zend_Service_Itunes_SearchTest extends PHPUnit_Framework_TestCase
      */
     public function testCreateInstance()
     {
+        $this->assertThat($this->itunesSearch, $this->isInstanceOf('Zend_Service_Itunes_ItunesAbstract'));
         $this->assertThat($this->itunesSearch, $this->isInstanceOf('Zend_Service_Itunes_Search'));
     }
+    
+    public function testCheckSearchUri()
+    {
+        $this->assertEquals('http://ax.phobos.apple.com.edgesuite.net/WebObjects/MZStoreServices.woa/wa/wsSearch?', $this->itunesSearch->getUri());
+    }
+    
+    
 }

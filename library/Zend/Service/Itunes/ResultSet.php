@@ -39,7 +39,7 @@ class Zend_Service_Itunes_ResultSet implements SeekableIterator
      * 
      * @return  Zend_Service_Itunes_Search_Result
      */
-    public function current ()
+    public function current()
     {
         return new Zend_Service_Itunes_Result($this->_results[$this->_position]);
     }
@@ -49,7 +49,7 @@ class Zend_Service_Itunes_ResultSet implements SeekableIterator
      * 
      * @return int
      */
-    public function key ()
+    public function key()
     {
         return $this->_position;
     }
@@ -57,7 +57,7 @@ class Zend_Service_Itunes_ResultSet implements SeekableIterator
     /**
      * Increment position by 1
      */
-    public function next ()
+    public function next()
     {
         $this->_position++;
     }
@@ -65,7 +65,7 @@ class Zend_Service_Itunes_ResultSet implements SeekableIterator
     /**
      * Set position to 0
      */
-    public function rewind ()
+    public function rewind()
     {
         $this->_position = 0;
     }
@@ -76,7 +76,7 @@ class Zend_Service_Itunes_ResultSet implements SeekableIterator
      * @param   int $position
      * @throws  OutOfBoundsException
      */
-    public function seek ($position = 0)
+    public function seek($position = 0)
     {
         $this->_position = $position;
         
@@ -90,7 +90,7 @@ class Zend_Service_Itunes_ResultSet implements SeekableIterator
      * 
      * @return bool
      */
-    public function valid ()
+    public function valid()
     {
         if ($this->_position < count($this->_results)) {
             return true;

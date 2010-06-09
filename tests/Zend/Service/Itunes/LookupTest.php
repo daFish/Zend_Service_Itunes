@@ -38,8 +38,16 @@ class Zend_Service_Itunes_LookupTest extends PHPUnit_Framework_TestCase
     /**
      * Test of correct instance creation
      */
-    public function testCreateInstance()
+    public function testInstance()
     {
-        $this->assertThat($this->itunesLookup, $this->isInstanceOf('Zend_Service_Itunes_Abstract'));
+        $this->assertThat($this->itunesLookup, $this->isInstanceOf('Zend_Service_Itunes_ItunesAbstract'));
+        $this->assertThat($this->itunesLookup, $this->isInstanceOf('Zend_Service_Itunes_Lookup'));
     }
+    
+    public function testCheckLookupUri()
+    {
+        $this->assertEquals('http://ax.phobos.apple.com.edgesuite.net/WebObjects/MZStoreServices.woa/wa/wsLookup?', $this->itunesLookup->getUri());
+    }
+    
+    
 }

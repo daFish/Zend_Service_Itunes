@@ -274,6 +274,8 @@ abstract class Zend_Service_Itunes_ItunesAbstract extends Zend_Service_Abstract
      */
     protected $_explicitTypes = array('yes', 'no');
     
+    protected $_uri = '';
+    
     /**
      * Default constructor
      */
@@ -327,7 +329,7 @@ abstract class Zend_Service_Itunes_ItunesAbstract extends Zend_Service_Abstract
     public function query()
     {
         // cannot be called when callback is set
-        if (!empty($this->_callback)) {
+        if ($this->_options['callback'] != '') {
             throw new Zend_Service_Itunes_Exception('Cannot run queryService when callback is set.');
         }
         
@@ -377,7 +379,7 @@ abstract class Zend_Service_Itunes_ItunesAbstract extends Zend_Service_Abstract
         
         // add language
         if (!empty($this->_options['language'])) {
-            $requestParameters[] = 'lang=' . $this->_options['language'];    
+            $requestParameters[] = 'lang=' . $this->_options['language'];
         }
         
         // add limit
@@ -455,6 +457,8 @@ abstract class Zend_Service_Itunes_ItunesAbstract extends Zend_Service_Abstract
         if (isset($this->_options[$key])) {
             return $this->_options[$key];
         }
+        
+        return null;
     }
     
     /**
@@ -610,19 +614,6 @@ abstract class Zend_Service_Itunes_ItunesAbstract extends Zend_Service_Abstract
     }
     
     /**
-     * Get complete assembled request url.
-     * 
-     * @return string
-     */
-    public function getRawRequestUrl()
-    {
-        if (empty($this->_rawRequestUrl))
-            $this->_buildSpecificRequestUri();
-            
-        return $this->_rawRequestUrl;
-    }
-    
-    /**
      * Set the flag indicating whether or not you want to include
      * explicit content in your search result
      * 
@@ -652,5 +643,15 @@ abstract class Zend_Service_Itunes_ItunesAbstract extends Zend_Service_Abstract
         }
         
         return $this;
+    }
+    
+    /**
+     * Get the Uri set to query the service
+     * 
+     * @return string
+     */
+    public function getUri()
+    {
+        return $this->_uri;
     }
 }

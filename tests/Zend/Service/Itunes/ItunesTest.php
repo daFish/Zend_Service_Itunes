@@ -26,6 +26,15 @@ class Zend_Service_Itunes_AbstractTest extends PHPUnit_Framework_TestCase
         $this->itunesSearch = new Zend_Service_Itunes_Search();
         $this->_filesDir = dirname(__FILE__) . '/_files/';
     }
+    
+    protected function _stubItunes()
+    {
+        $client = $this->getMock('Zend_Http_Client', array(), array(), '', false);
+        
+        $response = $this->getMock('Zend_Http_Response', array(), array(), '', false);
+        
+        return $client;
+    }
 
     /**
      * Runs the test methods of this class.
@@ -43,7 +52,7 @@ class Zend_Service_Itunes_AbstractTest extends PHPUnit_Framework_TestCase
      */
     public function testSetOptionsWithIniFile()
     {
-        $config = new Zend_Config_Ini($this->_filesDir . 'settings.ini', 'Itunes');
+        $config = new Zend_Config_Ini($this->_filesDir . 'settings.ini', 'itunes');
         $this->itunesSearch->setOptions($config);
         
         $this->assertEquals(array('hans', 'zimmer'), $this->itunesSearch->getTerms(), 'Test of terms.');
@@ -62,6 +71,12 @@ class Zend_Service_Itunes_AbstractTest extends PHPUnit_Framework_TestCase
     {
         $this->itunesSearch->setTerms(array('christopher', 'gordon'));
         $this->assertEquals(array('christopher', 'gordon'), $this->itunesSearch->getTerms());
+    }
+    
+    public function testSetTermsAsString()
+    {
+        $this->itunesSearch->setTerms('foobar');
+        $this->assertEquals(array('foobar'), $this->itunesSearch->getTerms());
     }
     
     /**
@@ -87,7 +102,7 @@ class Zend_Service_Itunes_AbstractTest extends PHPUnit_Framework_TestCase
      */
     public function testSetGetCallback()
     {
-        $this->itunesSearch->setResultFormat(Zend_Service_Itunes_Abstract::RESULT_JSON);
+        $this->itunesSearch->setResultFormat(Zend_Service_Itunes_ItunesAbstract::RESULT_JSON);
         $this->itunesSearch->setCallback('wbFoobar');
         $this->assertEquals('wbFoobar', $this->itunesSearch->callback);
     }
@@ -99,7 +114,7 @@ class Zend_Service_Itunes_AbstractTest extends PHPUnit_Framework_TestCase
     public function testSetGetCallbackException()
     {
         try {
-            $this->itunesSearch->setResultFormat(Zend_Service_Itunes_Abstract::RESULT_ARRAY);
+            $this->itunesSearch->setResultFormat(Zend_Service_Itunes_ItunesAbstract::RESULT_ARRAY);
             $this->itunesSearch->setCallback('wbFoobar');
         }
         catch (Zend_Service_Itunes_Exception $e) {
@@ -143,8 +158,8 @@ class Zend_Service_Itunes_AbstractTest extends PHPUnit_Framework_TestCase
      */
     public function testSetGetMediaType()
     {
-        $this->itunesSearch->setMediaType(Zend_Service_Itunes_Abstract::MEDIATYPE_TVSHOW);
-        $this->assertEquals(Zend_Service_Itunes_Abstract::MEDIATYPE_TVSHOW, $this->itunesSearch->mediatype);
+        $this->itunesSearch->setMediaType(Zend_Service_Itunes_ItunesAbstract::MEDIATYPE_TVSHOW);
+        $this->assertEquals(Zend_Service_Itunes_ItunesAbstract::MEDIATYPE_TVSHOW, $this->itunesSearch->mediatype);
     }
     
     /**
@@ -152,8 +167,8 @@ class Zend_Service_Itunes_AbstractTest extends PHPUnit_Framework_TestCase
      */
     public function testSetGetResultFormat()
     {
-        $this->itunesSearch->setResultFormat(Zend_Service_Itunes_Abstract::RESULT_ARRAY);
-        $this->assertEquals(Zend_Service_Itunes_Abstract::RESULT_ARRAY, $this->itunesSearch->getResultFormat());
+        $this->itunesSearch->setResultFormat(Zend_Service_Itunes_ItunesAbstract::RESULT_ARRAY);
+        $this->assertEquals(Zend_Service_Itunes_ItunesAbstract::RESULT_ARRAY, $this->itunesSearch->getResultFormat());
     }
     
     /**
@@ -210,5 +225,71 @@ class Zend_Service_Itunes_AbstractTest extends PHPUnit_Framework_TestCase
         
         $this->itunesSearch->setVersion(3);
         $this->assertEquals(1, $this->itunesSearch->version);
+    }
+    
+    /**
+     * Test if an exception is thrown when attempting to query the service without
+     * any settings
+     */
+    public function testEmptyQuery()
+    {
+        try {
+            $this->itunesSearch->query();
+        }
+        catch (Zend_Service_Itunes_Exception $e) {
+            return;
+        }
+        
+        $this->fail('An expected exception has not been raised!');
+    }
+    
+    /**
+     * Test if exception is correctly risen when setting a callback
+     * and query the service
+     */
+    public function testQueryWithCallback()
+    {
+        $this->itunesSearch->setCallback('wsCallback');
+        
+        try {
+            $this->itunesSearch->query();
+        }
+        catch (Zend_Service_Itunes_Exception $e) {
+            return;
+        }
+        
+        $this->fail('An expected exception has not been raised!');
+    }
+    
+    /**
+     * Test if the query successfully calls the service and returns
+     * an result
+     */
+    public function testQuery()
+    {
+        $this->itunesSearch->setTerms(array('karate', 'kid', 'james', 'horner'))
+                           ->setHttpClient($this->_stubItunes());
+        
+        $this->itunesSearch->query();
+    }
+    
+    /**
+     * Test if exception is correctly risen when trying to get
+     * an property
+     */
+    public function testOptionNotSet()
+    {
+        $this->assertEquals(null, $this->itunesSearch->foobar);
+    }
+    
+    /**
+     * Test if the raw request url is correctly assembled
+     */
+    public function testGetRawRequestUrl()
+    {
+        $this->itunesSearch->setTerms(array('star', 'trek'))
+                           ->setCountry('de');
+        
+        $this->assertEquals('http://ax.phobos.apple.com.edgesuite.net/WebObjects/MZStoreServices.woa/wa/wsSearch?entity=album&country=de&term=star+trek', $this->itunesSearch->getRawRequestUrl());
     }
 }
