@@ -28,7 +28,7 @@ abstract class Zend_Service_Itunes_ItunesAbstract extends Zend_Service_Abstract
     protected $_options = array(
         'country'   => 'us',
         'language'  => '',
-        'mediatype' => '',
+        'mediaType' => '',
         'entity'    => array(self::MEDIATYPE_ALL => 'album'),
         'attribute' => '',
         'limit'     => 0,
@@ -92,34 +92,34 @@ abstract class Zend_Service_Itunes_ItunesAbstract extends Zend_Service_Abstract
         self::MEDIATYPE_MOVIE => array(
             'movieArtist',
             'movie'
-            ),
+        ),
         self::MEDIATYPE_PODCAST => array(
             'podcastAuthor',
             'podcast'
-            ),
+        ),
         self::MEDIATYPE_MUSIC => array(
             'musicArtist',
             'musicTrack',
             'album',
             'musicVideo',
             'mix'
-            ),
+        ),
         self::MEDIATYPE_MUSICVIDEO => array(
             'musicArtist',
             'musicVideo'
-            ),
+        ),
         self::MEDIATYPE_AUDIOBOOK => array(
             'audiobookAuthor',
             'audiobook'
-            ),
+        ),
         self::MEDIATYPE_SHORTFILM => array(
             'shortFilmArtist',
             'shortFilm'
-            ),
+        ),
         self::MEDIATYPE_TVSHOW => array(
             'tvEpisode',
             'tvSeason'
-            ),
+        ),
         self::MEDIATYPE_ALL => array(
             'movie',
             'album',
@@ -130,7 +130,7 @@ abstract class Zend_Service_Itunes_ItunesAbstract extends Zend_Service_Abstract
             'audiobook',
             'tvSeason',
             'allTrack'
-            ),
+        ),
     );
     
     /**
@@ -138,99 +138,98 @@ abstract class Zend_Service_Itunes_ItunesAbstract extends Zend_Service_Abstract
      * 
      * @var array
      */
-    protected $_attributesTypes = 
-        array(
-            self::MEDIATYPE_MOVIE => array(
-                'actorTerm', 
-                'genreIndex', 
-                'artistTerm', 
-                'shortFilmTerm', 
-                'producerTerm', 
-                'ratingTerm', 
-                'directorTerm', 
-                'releaseYearTerm', 
-                'featureFilmTerm', 
-                'movieArtistTerm', 
-                'movieTerm', 
-                'ratingIndex', 
-                'descriptionTerm'
-            ),
-            self::MEDIATYPE_PODCAST => array(
-                'titleTerm', 
-                'languageTerm', 
-                'authorTerm', 
-                'genreIndex', 
-                'artistTerm', 
-                'ratingIndex', 
-                'keywordsTerm', 
-                'descriptionTerm'
-            ),
-            self::MEDIATYPE_MUSIC => array(
-                'mixTerm', 
-                'genreIndex', 
-                'artistTerm', 
-                'composerTerm', 
-                'albumTerm', 
-                'ratingIndex', 
-                'songTerm', 
-                'musicTrackTerm'
-            ),
-            self::MEDIATYPE_MUSICVIDEO => array(
-                'genreIndex', 
-                'artistTerm', 
-                'albumTerm', 
-                'ratingIndex', 
-                'songTerm'
-            ),
-            self::MEDIATYPE_AUDIOBOOK => array(
-                'titleTerm', 
-                'authorTerm', 
-                'genreIndex', 
-                'ratingIndex'
-            ),
-            self::MEDIATYPE_SHORTFILM => array(
-                'genreIndex', 
-                'artistTerm', 
-                'shortFilmTerm', 
-                'ratingIndex', 
-                'descriptionTerm'
-            ),
-            self::MEDIATYPE_TVSHOW => array(
-                'genreIndex', 
-                'tvEpisodeTerm', 
-                'showTerm', 
-                'tvSeasonTerm', 
-                'ratingIndex', 
-                'descriptionTerm'
-            ),
-            self::MEDIATYPE_ALL => array(
-                'actorTerm', 
-                'languageTerm', 
-                'allArtistTerm', 
-                'tvEpisodeTerm', 
-                'shortFilmTerm', 
-                'directorTerm', 
-                'releaseYearTerm', 
-                'titleTerm', 
-                'featureFilmTerm', 
-                'ratingIndex', 
-                'keywordsTerm', 
-                'descriptionTerm', 
-                'authorTerm', 
-                'genreIndex', 
-                'mixTerm', 
-                'allTrackTerm', 
-                'artistTerm', 
-                'composerTerm', 
-                'tvSeasonTerm', 
-                'producerTerm', 
-                'ratingTerm', 
-                'songTerm', 
-                'movieArtistTerm', 
-                'showTerm', 
-                'movieTerm', 
-                'albumTerm'
-            )
+    protected $_attributesTypes = array(
+        self::MEDIATYPE_MOVIE => array(
+            'actorTerm', 
+            'genreIndex', 
+            'artistTerm', 
+            'shortFilmTerm', 
+            'producerTerm', 
+            'ratingTerm', 
+            'directorTerm', 
+            'releaseYearTerm', 
+            'featureFilmTerm', 
+            'movieArtistTerm', 
+            'movieTerm', 
+            'ratingIndex', 
+            'descriptionTerm'
+        ),
+        self::MEDIATYPE_PODCAST => array(
+            'titleTerm', 
+            'languageTerm', 
+            'authorTerm', 
+            'genreIndex', 
+            'artistTerm', 
+            'ratingIndex', 
+            'keywordsTerm', 
+            'descriptionTerm'
+        ),
+        self::MEDIATYPE_MUSIC => array(
+            'mixTerm', 
+            'genreIndex', 
+            'artistTerm', 
+            'composerTerm', 
+            'albumTerm', 
+            'ratingIndex', 
+            'songTerm', 
+            'musicTrackTerm'
+        ),
+        self::MEDIATYPE_MUSICVIDEO => array(
+            'genreIndex', 
+            'artistTerm', 
+            'albumTerm', 
+            'ratingIndex', 
+            'songTerm'
+        ),
+        self::MEDIATYPE_AUDIOBOOK => array(
+            'titleTerm', 
+            'authorTerm', 
+            'genreIndex', 
+            'ratingIndex'
+        ),
+        self::MEDIATYPE_SHORTFILM => array(
+            'genreIndex', 
+            'artistTerm', 
+            'shortFilmTerm', 
+            'ratingIndex', 
+            'descriptionTerm'
+        ),
+        self::MEDIATYPE_TVSHOW => array(
+            'genreIndex', 
+            'tvEpisodeTerm', 
+            'showTerm', 
+            'tvSeasonTerm', 
+            'ratingIndex', 
+            'descriptionTerm'
+        ),
+        self::MEDIATYPE_ALL => array(
+            'actorTerm', 
+            'languageTerm', 
+            'allArtistTerm', 
+            'tvEpisodeTerm', 
+            'shortFilmTerm', 
+            'directorTerm', 
+            'releaseYearTerm', 
+            'titleTerm', 
+            'featureFilmTerm', 
+            'ratingIndex', 
+            'keywordsTerm', 
+            'descriptionTerm', 
+            'authorTerm', 
+            'genreIndex', 
+            'mixTerm', 
+            'allTrackTerm', 
+            'artistTerm', 
+            'composerTerm', 
+            'tvSeasonTerm', 
+            'producerTerm', 
+            'ratingTerm', 
+            'songTerm', 
+            'movieArtistTerm', 
+            'showTerm', 
+            'movieTerm', 
+            'albumTerm'
+        )
     );
         
     /**
@@ -274,20 +273,11 @@ abstract class Zend_Service_Itunes_ItunesAbstract extends Zend_Service_Abstract
      */
     protected $_explicitTypes = array('yes', 'no');
     
-    protected $_uri = '';
-    
     /**
      * Default constructor
      */
     public function __construct ($options = null)
     {
-        /**
-         * Init Zend_Http_Client object
-         * 
-         * @var Zend_Http_Client
-         */
-        $this->_clientInstance = self::getHttpClient();
-        
         /*
          * Set options
          */
@@ -336,9 +326,10 @@ abstract class Zend_Service_Itunes_ItunesAbstract extends Zend_Service_Abstract
         $this->_buildSpecificRequestUri();
         
         self::getHttpClient()->setUri($this->_rawRequestUrl);
-        
+
         $queryResult = self::getHttpClient()->request()->getBody();
-        if ($this->_resultFormat === self::RESULT_ARRAY) {
+
+        if ($this->_resultFormat == self::RESULT_ARRAY) {
             $resultSet = new Zend_Service_Itunes_ResultSet($queryResult);
         
             return $resultSet;
@@ -462,6 +453,16 @@ abstract class Zend_Service_Itunes_ItunesAbstract extends Zend_Service_Abstract
     }
     
     /**
+     * Return a list of all countries eligible for querying
+     * 
+     * @return array
+     */
+    public function getCountries()
+    {
+        return $this->_countryList;
+    }
+    
+    /**
      * Set country for search
      * 
      * @param   string              $country
@@ -500,7 +501,7 @@ abstract class Zend_Service_Itunes_ItunesAbstract extends Zend_Service_Abstract
     public function setMediaType($mediatype = '')
     {
         if (in_array($mediatype, $this->_mediaTypes)) {
-            $this->_options['mediatype'] = $mediatype;
+            $this->_options['mediaType'] = $mediatype;
         }
         
         return $this;
@@ -566,7 +567,7 @@ abstract class Zend_Service_Itunes_ItunesAbstract extends Zend_Service_Abstract
         // check if the key of the given array exists
         if (array_key_exists($key, $this->_entityList)) {
             // check if value exists for key
-            if(in_array($entity[$key], $this->_entityList[$key]))
+            if (in_array($entity[$key], $this->_entityList[$key]))
                 $this->_options['entity'] = $entity;
         }
 
@@ -583,12 +584,12 @@ abstract class Zend_Service_Itunes_ItunesAbstract extends Zend_Service_Abstract
      */
     public function setAttribute($attribute = '')
     {
-        if (empty($this->_options['mediaType'])) {
-            throw new Zend_Service_Itunes_Exception('Attribute is relative to set media type. No media type set.');
+        if ($this->_options['mediaType'] == '') {
+            throw new Zend_Service_Itunes_Exception('Attribute relates to media typebut no media type is set.');
         }
 
         // check if the attribute is in the set of attributes for media type
-        if (in_array($attribute, $this->_attributesTypes[$this->_mediaType])) {
+        if (in_array($attribute, $this->_attributesTypes[$this->_options['mediaType']])) {
             $this->_options['attribute'] = $attribute;
         } else {
             throw new Zend_Service_Itunes_Exception('Attribute is not in the set of attributes for this media type.');

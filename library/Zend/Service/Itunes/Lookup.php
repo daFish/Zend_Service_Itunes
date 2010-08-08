@@ -42,16 +42,6 @@ class Zend_Service_Itunes_Lookup extends Zend_Service_Itunes_ItunesAbstract
     protected $_entity = '';
     
     /**
-     * Constructor
-     * 
-     * @param $options
-     */
-    public function __construct($options = null)
-    {
-        parent::__construct($options);
-    }
-    
-    /**
      * Builds the request uri for parameters specifically used in:
      *     - Zend_Service_Itunes_Lookup
      * 
@@ -71,12 +61,6 @@ class Zend_Service_Itunes_Lookup extends Zend_Service_Itunes_ItunesAbstract
         if ($this->_lookupId === 0 XOR !empty($this->_amgArtistIds)) {
             throw new Zend_Service_Itunes_Exception('There is no lookupId or 
                 amgArtistId set.');
-        }
-        
-        // check if both lookupId and amgArtistId are set
-        if ($this->_lookupId > 0 AND !empty($this->_amgArtistIds)) {
-            throw new Zend_Service_Itunes_Exception('Please use either lookupId 
-                or amgArtistId.');
         }
         
         // add lookupId

@@ -24,16 +24,6 @@ class Zend_Service_Itunes_Search extends Zend_Service_Itunes_ItunesAbstract
     protected $_searchTerms = array();
     
     /**
-     * Constructor
-     * 
-     * @param $options
-     */
-    public function __construct($options = null)
-    {
-        parent::__construct($options);
-    }
-    
-    /**
      * Builds the request uri for parameters specifically used in:
      *     - Zend_Service_Itunes_Search
      * 
