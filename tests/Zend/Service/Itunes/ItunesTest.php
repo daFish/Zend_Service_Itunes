@@ -1,4 +1,24 @@
 <?php
+/**
+ * Zend Framework
+ *
+ * LICENSE
+ *
+ * This source file is subject to the new BSD license that is bundled
+ * with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://framework.zend.com/license/new-bsd
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@zend.com so we can send you a copy immediately.
+ *
+ * @category   Zend
+ * @package    Zend_Service_Itunes
+ * @subpackage UnitTests
+ * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
+ * @license    http://framework.zend.com/license/new-bsd     New BSD License
+ * @version    $Id $
+ */
 class Zend_Service_Itunes_ItunesTest extends PHPUnit_Framework_TestCase
 {
     /**
@@ -6,6 +26,9 @@ class Zend_Service_Itunes_ItunesTest extends PHPUnit_Framework_TestCase
      */
     protected $_itunesSearch =   null;
     
+    /**
+     * @var string
+     */
     protected $_filesDir = '';
     
     public function setUp()
@@ -17,7 +40,7 @@ class Zend_Service_Itunes_ItunesTest extends PHPUnit_Framework_TestCase
     }
     
     /**
-     * Test setter and getter for terms
+     * Test of Zend_Service_Itunes_ItunesAbstract::setTerms
      */
     public function testTerms()
     {
@@ -25,20 +48,14 @@ class Zend_Service_Itunes_ItunesTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(array('christopher', 'gordon'), $this->_itunesSearch->getTerms());
     }
     
+    /**
+     * Test of Zend_Service_Itunes_ItunesAbstract::setTerms
+     */
     public function testTermsNotArray()
     {
         $this->_itunesSearch->setTerms('star');
         $this->assertEquals(array('star'), $this->_itunesSearch->getTerms());
     }
-    
-    /*protected function _stubItunes()
-    {
-        $client = $this->getMock('Zend_Http_Client', array(), array(), '', false);
-        
-        $response = $this->getMock('Zend_Http_Response', array(), array(), '', false);
-        
-        return $client;
-    }*/
     
     /**
      * Test setting of options using .ini-file
@@ -57,6 +74,9 @@ class Zend_Service_Itunes_ItunesTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('wbCallback', $this->_itunesSearch->callback, 'Testing callback setting');
     }
     
+    /**
+     * Test of Zend_Service_Itunes_ItunesAbstract::__constructor
+     */
     public function testSetOptionsThroughConstructor()
     {
         $config = new Zend_Config_Ini($this->_filesDir . 'settings.ini', 'itunes');
@@ -71,14 +91,8 @@ class Zend_Service_Itunes_ItunesTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('wbCallback', $itunes->callback, 'Testing callback setting');
     }
     
-    public function testSetTermsAsString()
-    {
-        $this->_itunesSearch->setTerms('foobar');
-        $this->assertEquals(array('foobar'), $this->_itunesSearch->getTerms());
-    }
-    
     /**
-     * Test setter and getter for limit
+     * Test of Zend_Service_Itunes_ItunesAbstract::setLimit
      */
     public function testSetGetLimit()
     {
@@ -87,7 +101,7 @@ class Zend_Service_Itunes_ItunesTest extends PHPUnit_Framework_TestCase
     }
     
     /**
-     * Test setter and getter for explicity setting
+     * Test of Zend_Service_Itunes_ItunesAbstract::setExplicit
      */
     public function testSetGetExplicity()
     {
@@ -96,7 +110,7 @@ class Zend_Service_Itunes_ItunesTest extends PHPUnit_Framework_TestCase
     }
     
     /**
-     * Test setter and getter for callback with RESULT_JSON
+     * Test of Zend_Service_Itunes_ItunesAbstract::setCallback
      */
     public function testSetGetCallback()
     {
@@ -106,8 +120,7 @@ class Zend_Service_Itunes_ItunesTest extends PHPUnit_Framework_TestCase
     }
     
     /**
-     * Test setter and getter for callback with RESULT_ARRAY
-     * and expect exception
+     * Test of Zend_Service_Itunes_ItunesAbstract::setCallback
      * 
      * @expectedException Zend_Service_Itunes_Exception
      */
@@ -120,12 +133,20 @@ class Zend_Service_Itunes_ItunesTest extends PHPUnit_Framework_TestCase
     }
     
     /**
-     * Test setter and getter for country
+     * Test of Zend_Service_Itunes_ItunesAbstract::setCountry
      */
     public function testSetGetCountry()
     {
         $this->_itunesSearch->setCountry('gb');
         $this->assertEquals('gb', $this->_itunesSearch->country);
+    }
+    
+    /**
+     * Test of default value for country
+     */
+    public function testCountryDefaultValue()
+    {
+        $this->assertEquals('us', $this->_itunesSearch->country);
     }
     
     /**
@@ -140,7 +161,7 @@ class Zend_Service_Itunes_ItunesTest extends PHPUnit_Framework_TestCase
     }
     
     /**
-     * Test setter and getter for language
+     * Test of Zend_Service_Itunes_ItunesAbstract::setLanguage
      */
     public function testSetGetLanguage()
     {
@@ -149,7 +170,7 @@ class Zend_Service_Itunes_ItunesTest extends PHPUnit_Framework_TestCase
     }
     
     /**
-     * Test setter and getter media type
+     * Test of Zend_Service_Itunes_ItunesAbstract::setMediaType
      */
     public function testSetGetMediaType()
     {
@@ -158,7 +179,7 @@ class Zend_Service_Itunes_ItunesTest extends PHPUnit_Framework_TestCase
     }
     
     /**
-     * Test setter and getter for result format
+     * Test of Zend_Service_Itunes_ItunesAbstract::setResultFormat
      */
     public function testSetGetResultFormat()
     {
@@ -167,7 +188,7 @@ class Zend_Service_Itunes_ItunesTest extends PHPUnit_Framework_TestCase
     }
     
     /**
-     * Test setter and getter for entity type
+     * Test of Zend_Service_Itunes_ItunesAbstract::setEntity
      */
     public function testSetGetEntity()
     {
@@ -179,19 +200,17 @@ class Zend_Service_Itunes_ItunesTest extends PHPUnit_Framework_TestCase
     }
     
     /**
-     * Test set entity with empty array
+     * Test of Zend_Service_Itunes_ItunesAbstract::setEntity
      * 
      * @expectedException Zend_Service_Itunes_Exception
      */
     public function testSetEntityExceptionCountToLow()
     {
         $this->_itunesSearch->setEntity();
-        
-        $this->fail('An expected exception has not been raised!');
     }
     
     /**
-     * Test set entity with array count of 2
+     * Test of Zend_Service_Itunes_ItunesAbstract::setEntity
      * 
      * @expectedException Zend_Service_Itunes_Exception
      */
@@ -204,8 +223,7 @@ class Zend_Service_Itunes_ItunesTest extends PHPUnit_Framework_TestCase
     }
     
     /**
-     * Test set/get version incl. failtest when unvalid version
-     * should be set
+     * Test of Zend_Service_Itunes_ItunesAbstract::setVersion
      */
     public function testSetGetVersion()
     {
@@ -217,21 +235,17 @@ class Zend_Service_Itunes_ItunesTest extends PHPUnit_Framework_TestCase
     }
     
     /**
-     * Test if an exception is thrown when attempting to query the service without
-     * any settings
+     * Test of Zend_Service_Itunes_ItunesAbstract::query
      * 
      * @expectedException Zend_Service_Itunes_Exception
      */
     public function testEmptyQuery()
     {
         $this->_itunesSearch->query();
-        
-        $this->fail('An expected exception has not been raised!');
     }
     
     /**
-     * Test if exception is correctly risen when setting a callback
-     * and query the service
+     * Test of Zend_Service_Itunes_ItunesAbstract::query
      * 
      * @expectedException Zend_Service_Itunes_Exception
      */
@@ -252,17 +266,20 @@ class Zend_Service_Itunes_ItunesTest extends PHPUnit_Framework_TestCase
     }
     
     /**
-     * Test if the raw request url is correctly assembled
+     * Test of Zend_Service_Itunes_ItunesAbstract::getRawRequestUrl
      */
     public function testGetRawRequestUrl()
     {
         $this->_itunesSearch->setTerms(array('star', 'trek'))
-                           ->setCountry('de')
-                           ->setCallback('wsCallback');
+                            ->setCountry('de')
+                            ->setCallback('wsCallback');
         
         $this->assertEquals('http://ax.phobos.apple.com.edgesuite.net/WebObjects/MZStoreServices.woa/wa/wsSearch?entity=album&country=de&callback=wsCallback&term=star+trek', $this->_itunesSearch->getRawRequestUrl());
     }
     
+    /**
+     * Test of Zend_Service_Itunes_ItunesAbstract::setAttribute
+     */
     public function testAttribute()
     {
         $this->_itunesSearch->setMediaType(Zend_Service_Itunes_ItunesAbstract::MEDIATYPE_MUSIC);
@@ -270,6 +287,8 @@ class Zend_Service_Itunes_ItunesTest extends PHPUnit_Framework_TestCase
     }
     
     /**
+     * Test of Zend_Service_Itunes_ItunesAbstract::setAttribute
+     * 
      * @expectedException Zend_Service_Itunes_Exception
      */
     public function testAttributeWithEmptyMediaType()
@@ -278,6 +297,8 @@ class Zend_Service_Itunes_ItunesTest extends PHPUnit_Framework_TestCase
     }
     
     /**
+     * Test of Zend_Service_Itunes_ItunesAbstract::setAttribute
+     * 
      * @expectedException Zend_Service_Itunes_Exception
      */
     public function testAttributeWrongAttributeToMediaType()
@@ -286,11 +307,17 @@ class Zend_Service_Itunes_ItunesTest extends PHPUnit_Framework_TestCase
         $this->_itunesSearch->setAttribute('actorTerm');
     }
     
+    /**
+     * Test of Zend_Service_Itunes_ItunesAbstract::getCountries
+     */
     public function testGetListOfCountries()
     {
         $this->assertType('array', $this->_itunesSearch->getCountries());
     }
     
+    /**
+     * Test of Zend_Service_Itunes_ItunesAbstract::query
+     */
     public function testQueryWithCustomSettings()
     {
         $this->_itunesSearch->setMediaType('podcast');
