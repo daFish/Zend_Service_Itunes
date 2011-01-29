@@ -60,14 +60,15 @@ abstract class Zend_Service_Itunes_ItunesAbstract extends Zend_Service_Abstract
      */
     protected $_languageList = array('en_us', 'ja_jp');
     
-    const MEDIATYPE_ALL             = 'all';
-    const MEDIATYPE_PODCAST         = 'podcast';
-    const MEDIATYPE_MUSIC           = 'music';
-    const MEDIATYPE_MUSICVIDEO      = 'musicVideo';
-    const MEDIATYPE_AUDIOBOOK       = 'audiobook';
-    const MEDIATYPE_SHORTFILM       = 'shortFilm';
-    const MEDIATYPE_TVSHOW          = 'tvShow';
-    const MEDIATYPE_MOVIE           = 'movie';
+    const MEDIATYPE_ALL        = 'all';
+    const MEDIATYPE_PODCAST    = 'podcast';
+    const MEDIATYPE_MUSIC      = 'music';
+    const MEDIATYPE_MUSICVIDEO = 'musicVideo';
+    const MEDIATYPE_AUDIOBOOK  = 'audiobook';
+    const MEDIATYPE_SHORTFILM  = 'shortFilm';
+    const MEDIATYPE_SOFTWARE   = 'software';
+    const MEDIATYPE_TVSHOW     = 'tvShow';
+    const MEDIATYPE_MOVIE      = 'movie';
     
     /**
      * List of available media types
@@ -76,10 +77,12 @@ abstract class Zend_Service_Itunes_ItunesAbstract extends Zend_Service_Abstract
     protected $_mediaTypes = array(
         self::MEDIATYPE_ALL,
         self::MEDIATYPE_AUDIOBOOK,
+        self::MEDIATYPE_MOVIE,
         self::MEDIATYPE_MUSIC,
         self::MEDIATYPE_MUSICVIDEO,
         self::MEDIATYPE_PODCAST,
         self::MEDIATYPE_SHORTFILM,
+        self::MEDIATYPE_SOFTWARE,
         self::MEDIATYPE_TVSHOW
     );
     
@@ -119,6 +122,9 @@ abstract class Zend_Service_Itunes_ItunesAbstract extends Zend_Service_Abstract
         self::MEDIATYPE_TVSHOW => array(
             'tvEpisode',
             'tvSeason'
+        ),
+        self::MEDIATYPE_SOFTWARE => array(
+            'software'
         ),
         self::MEDIATYPE_ALL => array(
             'movie',
@@ -193,6 +199,9 @@ abstract class Zend_Service_Itunes_ItunesAbstract extends Zend_Service_Abstract
             'shortFilmTerm', 
             'ratingIndex', 
             'descriptionTerm'
+        ),
+        self::MEDIATYPE_SOFTWARE => array(
+            'softwareDeveloper'
         ),
         self::MEDIATYPE_TVSHOW => array(
             'genreIndex', 
@@ -276,7 +285,7 @@ abstract class Zend_Service_Itunes_ItunesAbstract extends Zend_Service_Abstract
     /**
      * Default constructor
      */
-    public function __construct ($options = null)
+    public function __construct($options = null)
     {
         /*
          * Set options
@@ -292,7 +301,7 @@ abstract class Zend_Service_Itunes_ItunesAbstract extends Zend_Service_Abstract
      * @param   array $options
      * @return  void
      */
-    public function setOptions ($options = null)
+    public function setOptions($options = null)
     {
         if ($options instanceof Zend_Config) {
             $options = $options->toArray();
