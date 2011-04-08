@@ -124,7 +124,9 @@ abstract class Zend_Service_Itunes_ItunesAbstract extends Zend_Service_Abstract
             'tvSeason'
         ),
         self::MEDIATYPE_SOFTWARE => array(
-            'software'
+            'software',
+            'iPadSoftware',
+            'macSoftware'
         ),
         self::MEDIATYPE_ALL => array(
             'movie',
