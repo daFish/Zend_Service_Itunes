@@ -31,7 +31,7 @@ abstract class Zend_Service_Itunes_ItunesAbstract extends Zend_Service_Abstract
         'mediaType' => '',
         'entity'    => array(self::MEDIATYPE_ALL => 'album'),
         'attribute' => '',
-        'limit'     => 0,
+        'limit'     => 100,
         'callback'  => '',
         'version'   => 2,
         'explicit'  => 'yes'
@@ -69,6 +69,7 @@ abstract class Zend_Service_Itunes_ItunesAbstract extends Zend_Service_Abstract
     const MEDIATYPE_SOFTWARE   = 'software';
     const MEDIATYPE_TVSHOW     = 'tvShow';
     const MEDIATYPE_MOVIE      = 'movie';
+    const MEDIATYPE_EBOOK      = 'ebook';
 
     /**
      * List of available media types
@@ -127,6 +128,9 @@ abstract class Zend_Service_Itunes_ItunesAbstract extends Zend_Service_Abstract
             'software',
             'iPadSoftware',
             'macSoftware'
+        ),
+        self::MEDIATYPE_EBOOK => array(
+            'ebook'
         ),
         self::MEDIATYPE_ALL => array(
             'movie',
@@ -331,7 +335,7 @@ abstract class Zend_Service_Itunes_ItunesAbstract extends Zend_Service_Abstract
     {
         // cannot be called when callback is set
         if ($this->_options['callback'] != '') {
-            throw new Zend_Service_Itunes_Exception('Cannot run queryService when callback is set.');
+            throw new Zend_Service_Itunes_Exception('Cannot run query when callback is set.');
         }
 
         $this->_buildSpecificRequestUri();
@@ -345,11 +349,11 @@ abstract class Zend_Service_Itunes_ItunesAbstract extends Zend_Service_Abstract
 
             return $resultSet;
         } else {
-            // convert JSON-string to array
-            $jsonString = Zend_Json::decode($queryResult);
+        	// convert JSON-string to array
+            $jsonString = json_decode($queryResult);
 
-            $this->_resultCount = (int)$jsonString['resultCount'];
-            $this->_results = Zend_Json::encode($jsonString['results']);
+            $this->_resultCount = (int)$jsonString->resultCount;
+            $this->_results     = json_encode($jsonString->results);
         }
     }
 
@@ -385,7 +389,7 @@ abstract class Zend_Service_Itunes_ItunesAbstract extends Zend_Service_Abstract
         }
 
         // add limit
-        if ($this->_options['limit'] > 0) {
+        if ($this->_options['limit'] <> 100) {
             $requestParameters[] = 'limit=' . $this->_options['limit'];
         }
 
@@ -549,8 +553,13 @@ abstract class Zend_Service_Itunes_ItunesAbstract extends Zend_Service_Abstract
      * @param   integer $limit
      * @return  Zend_Service_Itunes Provides a fluent interface
      */
-    public function setLimit($limit = 50)
+    public function setLimit($limit = 100)
     {
+        if ($limit <= 0 || $limit > 200)
+        {
+            $limit = 100;
+        }
+
         $this->_options['limit'] = (int)$limit;
 
         return $this;
