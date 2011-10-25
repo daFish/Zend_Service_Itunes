@@ -1,6 +1,8 @@
 Zend_Service_Itunes
 ===================
 
+NOTE: This component is deprecated in favor of: https://github.com/daFish/pondtunes
+
 This component provides an way to query the iTunes Web Service API by implementing all functions provided in the
 'iTunes Store Web Service API' (http://www.apple.com/itunes/affiliates/resources/documentation/itunes-store-web-service-search-api.html).
 
